@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Control de Stock - Portal SAP</title>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --bg: #f3f6fa;
+      --panel: #ffffff;
+      --panel-2: #f8fafc;
+      --ink: #102033;
+      --muted: #66758a;
+      --line: #d9e2ee;
+      --nav: #10192b;
+      --nav-2: #19263a;
+      --brand: #16aee5;
+      --brand-dark: #0078ad;
+      --green: #95eb61;
+      --green-dark: #0f4a3f;
+      --yellow-bg: #fff3de;
+      --yellow-ink: #996200;
+      --red-bg: #fdeceb;
+      --red-ink: #b3261e;
+      --shadow: 0 10px 28px rgba(16, 32, 51, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .login-screen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: var(--nav);
+      padding: 24px;
+    }
+
+    .login-card {
+      width: min(390px, 100%);
+      background: #ffffff;
+      border-radius: 15px;
+      border-top: 4px solid var(--brand);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+      padding: 34px 32px;
+    }
+
+    .login-head {
+      text-align: center;
+      margin-bottom: 26px;
+    }
+
+    .logo {
+      color: var(--brand);
+      font-size: 34px;
+      line-height: 1;
+      letter-spacing: -1.2px;
+      font-weight: 800;
+    }
+
+    .login-head h1 {
+      margin: 10px 0 4px;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+
+    .login-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 16px;
+    }
+
+    .field span {
+      color: #1c3150;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      min-height: 40px;
+      border: 1px solid #c8d3e1;
+      border-radius: 8px;
+      padding: 9px 11px;
+      color: var(--ink);
+      outline: none;
+      background: #ffffff;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(22, 174, 229, 0.16);
+    }
+
+    .primary-btn,
+    .secondary-btn,
+    .icon-btn {
+      border: 0;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .primary-btn {
+      min-height: 42px;
+      padding: 0 16px;
+      background: var(--brand);
+      color: #ffffff;
+      font-weight: 800;
+      box-shadow: 0 8px 18px rgba(22, 174, 229, 0.25);
+    }
+
+    .secondary-btn {
+      min-height: 38px;
+      padding: 0 12px;
+      color: var(--ink);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      font-weight: 700;
+    }
+
+    .full {
+      width: 100%;
+    }
+
+    .login-help {
+      margin-top: 16px;
+      padding: 10px;
+      border-radius: 8px;
+      background: #eef7fb;
+      color: #3d6378;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .login-error {
+      display: none;
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      background: var(--red-bg);
+      color: var(--red-ink);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      background: var(--bg);
+    }
+
+    .sidebar {
+      background: #eef2f7;
+      border-right: 1px solid var(--line);
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .profile {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 11px;
+      display: grid;
+      grid-template-columns: 36px minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 1px 0 rgba(16, 32, 51, 0.04);
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand), var(--green));
+      display: grid;
+      place-items: center;
+      color: #073047;
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    .profile strong,
+    .profile span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .profile strong {
+      font-size: 13px;
+    }
+
+    .profile span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .section-title {
+      padding: 0 8px;
+      margin: 0 0 6px;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      font-weight: 800;
+    }
+
+    .nav-list {
+      display: grid;
+      gap: 5px;
+    }
+
+    .nav-btn {
+      min-height: 36px;
+      width: 100%;
+      border: 0;
+      border-radius: 8px;
+      padding: 8px 9px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      text-align: left;
+      color: var(--ink);
+      background: transparent;
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .nav-btn.active {
+      background: var(--panel);
+      color: var(--brand-dark);
+      box-shadow: 0 1px 0 rgba(16, 32, 51, 0.04);
+    }
+
+    .nav-btn svg,
+    .icon-btn svg,
+    .primary-btn svg,
+    .secondary-btn svg {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 auto;
+    }
+
+    .main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      min-height: 60px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 20px;
+    }
+
+    .search-box {
+      max-width: 460px;
+      position: relative;
+    }
+
+    .search-box svg {
+      position: absolute;
+      top: 50%;
+      left: 11px;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--muted);
+    }
+
+    .search-box input {
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-2);
+      padding: 9px 12px 9px 36px;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .chip {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: var(--ink);
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      color: var(--ink);
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+    }
+
+    .content {
+      padding: 18px 20px 24px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 0.8fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .stock-value {
+      position: relative;
+      overflow: hidden;
+      min-height: 130px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, var(--green), #c8ff75);
+      padding: 16px;
+      color: #073327;
+      box-shadow: var(--shadow);
+    }
+
+    .stock-value:after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -48px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      border: 24px solid rgba(255, 255, 255, 0.28);
+    }
+
+    .stock-value small,
+    .stock-value strong,
+    .stock-value span,
+    .stock-actions {
+      position: relative;
+      z-index: 1;
+    }
+
+    .stock-value small {
+      display: block;
+      color: #174b3d;
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .stock-value strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 31px;
+      line-height: 1.05;
+      letter-spacing: -0.4px;
+    }
+
+    .stock-value span {
+      display: block;
+      margin-top: 4px;
+      font-size: 12px;
+    }
+
+    .stock-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .pill-btn {
+      min-height: 32px;
+      border: 0;
+      border-radius: 999px;
+      padding: 7px 13px;
+      font-weight: 800;
+      font-size: 12px;
+      background: #ffffff;
+      color: #174b3d;
+    }
+
+    .pill-btn.dark {
+      background: #07382f;
+      color: #ffffff;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      box-shadow: 0 1px 0 rgba(16, 32, 51, 0.04);
+      min-width: 0;
+    }
+
+    .panel-pad {
+      padding: 14px;
+    }
+
+    .panel h2,
+    .table-title h2 {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .mini-grid {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .mini-card {
+      min-width: 0;
+      padding: 10px;
+      border-radius: 8px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+    }
+
+    .mini-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .mini-card strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 19px;
+    }
+
+    .mini-card small {
+      display: block;
+      margin-top: 3px;
+      color: var(--green-dark);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .quality {
+      display: grid;
+      gap: 10px;
+    }
+
+    .quality-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: baseline;
+    }
+
+    .quality-head strong {
+      color: var(--green-dark);
+      font-size: 24px;
+    }
+
+    .quality-bar {
+      height: 18px;
+      border-radius: 5px;
+      background: #e9eef5;
+      overflow: hidden;
+      padding: 3px;
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .quality-bar div {
+      width: var(--quality-width, 0%);
+      border-radius: 3px;
+      background: #083c33;
+      transition: width 160ms ease;
+    }
+
+    .quality p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.85fr) minmax(180px, 0.85fr) auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .filters .field {
+      margin: 0;
+    }
+
+    .work-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .table-panel {
+      overflow: hidden;
+    }
+
+    .table-head {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .table-title p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .table-tools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #eaf6fc;
+      color: var(--brand-dark);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 820px;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th {
+      padding: 10px 11px;
+      text-align: left;
+      color: var(--muted);
+      background: var(--panel-2);
+      border-bottom: 1px solid var(--line);
+      font-weight: 900;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+
+    td {
+      padding: 10px 11px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .state {
+      display: inline-flex;
+      align-items: center;
+      min-height: 23px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #eaf8ef;
+      color: var(--green-dark);
+      font-weight: 900;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .state.warn {
+      background: var(--yellow-bg);
+      color: var(--yellow-ink);
+    }
+
+    .empty {
+      padding: 34px 16px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .side-panel {
+      display: grid;
+      gap: 12px;
+    }
+
+    .export-card,
+    .load-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 14px;
+      box-shadow: 0 1px 0 rgba(16, 32, 51, 0.04);
+    }
+
+    .export-card h3,
+    .load-card h3 {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .export-card p,
+    .load-card p {
+      margin: 6px 0 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .file-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .file-row {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-2);
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .file-row label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--ink);
+    }
+
+    .file-row input {
+      width: 100%;
+      font-size: 12px;
+    }
+
+    .file-status {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.25;
+    }
+
+    .file-status.ok {
+      color: var(--green-dark);
+      font-weight: 900;
+    }
+
+    .file-status.bad {
+      color: var(--red-ink);
+      font-weight: 900;
+    }
+
+    .admin-only {
+      display: none;
+    }
+
+    body.is-admin .admin-only {
+      display: block;
+    }
+
+    body.is-admin .admin-only.flex {
+      display: flex;
+    }
+
+    .pager {
+      border-top: 1px solid var(--line);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pager-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    @media (max-width: 1080px) {
+      .app-shell,
+      .work-grid,
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar,
+      .filters,
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .top-actions {
+        justify-content: flex-start;
+      }
+
+      .content {
+        padding: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <div class="login-head">
+        <div class="logo">personal</div>
+        <h1>Control de Stock</h1>
+        <p>Portal Unificado SAP</p>
+      </div>
+
+      <form id="loginForm">
+        <label class="field">
+          <span>Usuario / Denominacion SAP</span>
+          <input id="loginUser" type="text" placeholder="Usuario asignado" autocomplete="username" required />
+        </label>
+        <label class="field">
+          <span>Contrasena</span>
+          <input id="loginPass" type="password" value="12345" autocomplete="current-password" required />
+        </label>
+        <button class="primary-btn full" type="submit">Ingresar al Portal</button>
+      </form>
+
+      <div class="login-help">
+        Acceso restringido por usuario. Contratistas ingresan por almacen o denominacion. Tecnicos propios pueden ingresar por centro-almacen.
+      </div>
+      <div id="loginError" class="login-error">Usuario o contrasena incorrectos.</div>
+    </div>
+  </section>
+
+  <section id="appScreen" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="profile">
+        <div id="avatar" class="avatar">A</div>
+        <div>
+          <strong id="profileName">ADMIN</strong>
+          <span id="profileRole">Administrador</span>
+        </div>
+      </div>
+
+      <nav>
+        <p class="section-title">Menu principal</p>
+        <div class="nav-list">
+          <button class="nav-btn active" data-tab="dashboard" type="button"><i data-lucide="layout-dashboard"></i>Dashboard</button>
+          <button class="nav-btn" data-tab="stock" type="button"><i data-lucide="boxes"></i>Stock</button>
+          <button class="nav-btn" data-tab="serializables" type="button"><i data-lucide="scan-barcode"></i>Serializables</button>
+          <button class="nav-btn" data-tab="consumos" type="button"><i data-lucide="trending-down"></i>Consumo materiales</button>
+          <button class="nav-btn" data-tab="consumosSer" type="button"><i data-lucide="list-checks"></i>Consumo serializables</button>
+          <button class="nav-btn" data-tab="transitos" type="button"><i data-lucide="truck"></i>Transito</button>
+        </div>
+      </nav>
+
+      <nav>
+        <p class="section-title">Administracion</p>
+        <div class="nav-list">
+          <button class="nav-btn" data-tab="carga" type="button"><i data-lucide="upload"></i>Carga SAP</button>
+          <button class="nav-btn" id="sidebarExport" type="button"><i data-lucide="download"></i>Mis Excel</button>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="search-box">
+          <i data-lucide="search"></i>
+          <input id="globalSearch" type="search" placeholder="Buscar material, serie, lote, almacen o documento" />
+        </div>
+        <div class="top-actions">
+          <span id="scopeChip" class="chip"><i data-lucide="shield-check"></i> Vista filtrada</span>
+          <span id="userChip" class="chip"><i data-lucide="user-round"></i> ADMIN</span>
+          <button id="logoutBtn" class="icon-btn" type="button" aria-label="Salir"><i data-lucide="log-out"></i></button>
+        </div>
+      </header>
+
+      <section class="content">
+        <div id="dashboardView">
+          <div class="hero-grid">
+            <article class="stock-value">
+              <small>Stock valorizado visible</small>
+              <strong id="totalValue">$ 0</strong>
+              <span id="visibleScope">Solo informacion asignada al usuario logeado.</span>
+              <div class="stock-actions">
+                <button class="pill-btn" data-tab-short="stock" type="button">Ver stock</button>
+                <button class="pill-btn dark" id="heroExport" type="button">Exportar Excel</button>
+              </div>
+            </article>
+
+            <article class="panel panel-pad">
+              <h2>Resumen SAP</h2>
+              <div class="mini-grid">
+                <div class="mini-card"><span>Stock</span><strong id="kpiStock">0</strong><small>filas visibles</small></div>
+                <div class="mini-card"><span>Serializables</span><strong id="kpiSerializables">0</strong><small>series</small></div>
+                <div class="mini-card"><span>Transito</span><strong id="kpiTransitos">0</strong><small>por recibir</small></div>
+              </div>
+            </article>
+
+            <article class="panel panel-pad quality">
+              <div class="quality-head">
+                <h2>Calidad de carga</h2>
+                <strong id="qualityNumber">0/5</strong>
+              </div>
+              <div class="quality-bar"><div id="qualityBar"></div></div>
+              <p id="qualityText">Cargue los cinco archivos SAP para publicar una vista completa.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="filters">
+          <label class="field admin-only">
+            <span>Contratista / tecnico</span>
+            <select id="scopeSelect"></select>
+          </label>
+          <label class="field">
+            <span>Vista activa</span>
+            <select id="tabSelect">
+              <option value="dashboard">Dashboard</option>
+              <option value="stock">Stock</option>
+              <option value="serializables">Serializables</option>
+              <option value="consumos">Consumo materiales</option>
+              <option value="consumosSer">Consumo serializables</option>
+              <option value="transitos">Transito</option>
+              <option value="carga">Carga SAP</option>
+            </select>
+          </label>
+          <button id="exportVisibleBtn" class="primary-btn" type="button"><i data-lucide="file-spreadsheet"></i>Descargar Excel</button>
+        </div>
+
+        <div class="work-grid">
+          <section id="dataPanel" class="panel table-panel">
+            <div class="table-head">
+              <div class="table-title">
+                <h2 id="tableTitle">Stock total de almacenes</h2>
+                <p id="tableSubtitle">Vista filtrada por usuario. La descarga respeta el mismo alcance.</p>
+              </div>
+              <div class="table-tools">
+                <span id="rowBadge" class="badge">0 filas</span>
+                <button id="clearSearchBtn" class="secondary-btn" type="button"><i data-lucide="x"></i>Limpiar busqueda</button>
+              </div>
+            </div>
+            <div id="tableWrap" class="table-wrap"></div>
+            <div class="pager">
+              <span id="pagerInfo">Pagina 1 de 1</span>
+              <div class="pager-actions">
+                <button id="prevPage" class="secondary-btn" type="button">Anterior</button>
+                <button id="nextPage" class="secondary-btn" type="button">Siguiente</button>
+              </div>
+            </div>
+          </section>
+
+          <aside class="side-panel">
+            <article class="export-card">
+              <h3>Descarga para usuario logeado</h3>
+              <p>Genera un Excel con 5 hojas: stock, serializables, consumo materiales, consumo serializables y transito.</p>
+              <button id="sideExport" class="primary-btn full" type="button"><i data-lucide="download"></i>Descargar mi informacion</button>
+            </article>
+
+            <article id="cargaPanel" class="load-card">
+              <h3>Carga SAP</h3>
+              <p>Suba los archivos descargados de SAP. El portal valida columnas basicas y guarda la carga en este navegador.</p>
+              <div class="file-list" id="fileList"></div>
+            </article>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </section>
+
+  <script>
+    const USERS = [
+      {
+        id: "ADMIN",
+        password: "12345",
+        name: "ADMIN",
+        role: "Administrador",
+        type: "admin",
+        scopes: ["*"]
+      }
+    ];
+
+    const TEMPORARY_PORTAL_PASSWORD = "12345";
+
+    const CONFIG = {
+      stock: {
+        title: "Stock total de almacenes",
+        filename: "stock total.xlsx",
+        required: ["Material", "Almacen"],
+        columns: [
+          ["Material", ["Material"]],
+          ["Texto breve", ["Texto breve de material", "Texto breve material", "Texto breve", "Denominacion"]],
+          ["Centro", ["Centro"]],
+          ["Almacen", ["Almacen", "Almacén"]],
+          ["Lote", ["Lote"]],
+          ["Libre utilizacion", ["Libre utilizacion", "Libre utilización"]],
+          ["UM", ["Unidad medida base", "UM"]],
+          ["Denominacion almacen", ["Denominacion almacen", "Denominación almacén"]],
+          ["Numero stock especial", ["Numero de stock especial", "Número de stock especial", "Nº stock especial"]],
+          ["Valor libre util.", ["Valor libre util.", "Valor libre util"]],
+          ["Moneda", ["Moneda"]]
+        ],
+        scopeFields: [["Denominacion almacen", "Denominación almacén"], ["Almacen", "Almacén"], ["Numero de stock especial", "Número de stock especial", "Nº stock especial"]]
+      },
+      serializables: {
+        title: "Equipos serializables en stock",
+        filename: "serializables.xlsx",
+        required: ["Material", "Almacen"],
+        columns: [
+          ["Centro", ["Centro"]],
+          ["Almacen", ["Almacen", "Almacén"]],
+          ["Material", ["Material"]],
+          ["Denominacion", ["Denominacion", "Denominación"]],
+          ["Numero de serie", ["Numero de serie", "Número de serie", "Nº de Serie"]],
+          ["Lote", ["Lote"]]
+        ],
+        scopeFields: [["Almacen", "Almacén"], ["Denominacion almacen", "Denominación almacén"]]
+      },
+      consumos: {
+        title: "Consumo de materiales",
+        filename: "consumos.xlsx",
+        required: ["Material", "Almacen"],
+        columns: [
+          ["Centro", ["Centro"]],
+          ["Almacen", ["Almacen", "Almacén"]],
+          ["Material", ["Material"]],
+          ["Texto breve", ["Texto breve de material", "Texto breve material", "Texto breve"]],
+          ["Cantidad", ["Cantidad"]],
+          ["Fecha entrada", ["Fecha de entrada"]],
+          ["Texto", ["Texto"]],
+          ["Hora", ["Hora de entrada"]]
+        ],
+        scopeFields: [["Almacen", "Almacén"], ["Denominacion almacen", "Denominación almacén"]]
+      },
+      consumosSer: {
+        title: "Consumo de equipos serializables",
+        filename: "consumos serializables.xlsx",
+        required: ["Material", "Almacen"],
+        columns: [
+          ["ID Open", ["ID Open"]],
+          ["Doc. Mat.", ["Documento material"]],
+          ["Ejerc.", ["Ejerc.documento mat."]],
+          ["Posicion", ["Posicion", "Posición"]],
+          ["Centro", ["Centro"]],
+          ["Almacen", ["Almacen", "Almacén"]],
+          ["Material", ["Material"]],
+          ["Numero de serie", ["Numero de serie", "Número de serie", "Nº de Serie"]],
+          ["F. Contab.", ["Fe.contabilización", "Fe.contabilizacion"]],
+          ["Fecha entrada", ["Fecha de entrada"]],
+          ["Texto", ["Texto"]],
+          ["Cantidad", ["Cantidad"]],
+          ["Movimiento", ["Clase de Movimiento"]],
+          ["Documento inventario", ["Documento de inventario"]]
+        ],
+        scopeFields: [["Almacen", "Almacén"], ["Denominacion almacen", "Denominación almacén"]]
+      },
+      transitos: {
+        title: "Materiales en transito",
+        filename: "transitos.xlsx",
+        required: ["Material", "Almacen Receptor"],
+        columns: [
+          ["Fecha transito", ["Fecha Transito", "Fecha Tránsito"]],
+          ["Doc. Mat.", ["Documento material"]],
+          ["Referencia", ["Su referencia", "Referencia"]],
+          ["Centro emisor", ["Centro Emisor"]],
+          ["Centro receptor", ["Centro Receptor"]],
+          ["Almacen receptor", ["Almacen Receptor", "Almacén Receptor"]],
+          ["Material", ["Material"]],
+          ["Texto breve", ["Texto breve material", "Texto breve de material", "Texto breve"]],
+          ["Lote/ Clase Valoracion", ["Lote/ Clase Valoracion", "Lote/ Clase Valoración"]],
+          ["Cantidad", ["Cantidad"]],
+          ["Precio unitario", ["Precio Unitario"]],
+          ["Valor neto", ["Valor neto"]],
+          ["Elemento PEP", ["Elemento PEP"]],
+          ["Stock especial", ["Stock especial"]],
+          ["Documento compras", ["Documento compras"]]
+        ],
+        scopeFields: [["Almacen Receptor", "Almacén Receptor"], ["Stock especial"], ["Elemento PEP"], ["Denominacion almacen", "Denominación almacén"]]
+      }
+    };
+
+    const TAB_ORDER = ["stock", "serializables", "consumos", "consumosSer", "transitos"];
+    const STORAGE_PREFIX = "portal_sap_v1_";
+    const REPOSITORY_DATA_FOLDER = "data/";
+    const PAGE_SIZE = 25;
+
+    let currentUser = null;
+    let selectedScope = "*";
+    let activeTab = "dashboard";
+    let currentPage = 1;
+    let db = {
+      stock: [],
+      serializables: [],
+      consumos: [],
+      consumosSer: [],
+      transitos: []
+    };
+    let loadTimes = {};
+
+    const $ = (id) => document.getElementById(id);
+
+    function normalize(value) {
+      return String(value ?? "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toUpperCase();
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function parseNumber(value) {
+      if (typeof value === "number") return value;
+      const cleaned = String(value ?? "")
+        .replace(/\$/g, "")
+        .replace(/\s/g, "")
+        .replace(/\./g, "")
+        .replace(",", ".");
+      const parsed = Number(cleaned);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function formatMoney(value) {
+      return new Intl.NumberFormat("es-AR", {
+        style: "currency",
+        currency: "ARS",
+        maximumFractionDigits: 0
+      }).format(value || 0);
+    }
+
+    function getValue(row, aliases) {
+      for (const alias of aliases) {
+        if (Object.prototype.hasOwnProperty.call(row, alias)) return row[alias];
+      }
+
+      const normalizedAliases = aliases.map(normalize);
+      const key = Object.keys(row).find((candidate) => normalizedAliases.includes(normalize(candidate)));
+      return key ? row[key] : "";
+    }
+
+    function hasColumn(rows, aliases) {
+      if (!rows.length) return false;
+      const keys = Object.keys(rows[0]).map(normalize);
+      return aliases.some((alias) => keys.includes(normalize(alias)));
+    }
+
+    function validateRows(tab, rows) {
+      const config = CONFIG[tab];
+      const missing = config.required.filter((requiredName) => {
+        const column = config.columns.find(([label]) => normalize(label) === normalize(requiredName));
+        const aliases = column ? column[1] : [requiredName];
+        return !hasColumn(rows, aliases);
+      });
+      return missing;
+    }
+
+    function rowMatchesScope(tab, row) {
+      if (!currentUser) return false;
+      if (currentUser.type === "admin" && selectedScope === "*") return true;
+
+      const scopes = currentUser.type === "admin" ? [selectedScope] : currentUser.scopes;
+      const normalizedScopes = scopes.map(normalize).filter(Boolean);
+      const fields = CONFIG[tab].scopeFields || [];
+
+      const compoundScope = normalizedScopes.find((scope) => scope.includes("-"));
+      if (compoundScope) {
+        return rowMatchesCenterWarehouse(tab, row, compoundScope);
+      }
+
+      return fields.some((aliases) => {
+        const value = normalize(getValue(row, aliases));
+        return normalizedScopes.some((scope) => value.includes(scope) || value === scope);
+      });
+    }
+
+    function rowMatchesCenterWarehouse(tab, row, scope) {
+      const parts = scope.split("-").map((part) => part.trim()).filter(Boolean);
+      if (parts.length < 2) return false;
+
+      const center = parts[0];
+      const warehouse = parts.slice(1).join("-");
+      const centerAliases = tab === "transitos"
+        ? ["Centro Receptor"]
+        : ["Centro"];
+      const warehouseAliases = tab === "transitos"
+        ? ["Almacen Receptor", "Almacén Receptor"]
+        : ["Almacen", "Almacén"];
+
+      const rowCenter = normalize(getValue(row, centerAliases));
+      const rowWarehouse = normalize(getValue(row, warehouseAliases));
+
+      return rowCenter === center && rowWarehouse === warehouse;
+    }
+
+    function rowMatchesSearch(tab, row) {
+      const query = normalize($("globalSearch").value);
+      if (!query) return true;
+      const haystack = CONFIG[tab].columns.map(([, aliases]) => normalize(getValue(row, aliases))).join(" ");
+      return haystack.includes(query);
+    }
+
+    function getFiltered(tab) {
+      return db[tab].filter((row) => rowMatchesScope(tab, row) && rowMatchesSearch(tab, row));
+    }
+
+    function getAllFiltered() {
+      return Object.fromEntries(TAB_ORDER.map((tab) => [tab, getFiltered(tab)]));
+    }
+
+    function toExportRows(tab, rows) {
+      return rows.map((row) => {
+        const out = {};
+        CONFIG[tab].columns.forEach(([label, aliases]) => {
+          out[label] = getValue(row, aliases);
+        });
+        return out;
+      });
+    }
+
+    function saveTab(tab) {
+      localStorage.setItem(STORAGE_PREFIX + tab, JSON.stringify(db[tab]));
+      localStorage.setItem(STORAGE_PREFIX + "time_" + tab, loadTimes[tab] || "");
+    }
+
+    function loadSavedData() {
+      TAB_ORDER.forEach((tab) => {
+        try {
+          const data = localStorage.getItem(STORAGE_PREFIX + tab);
+          const time = localStorage.getItem(STORAGE_PREFIX + "time_" + tab);
+          if (data) db[tab] = JSON.parse(data);
+          if (time) loadTimes[tab] = time;
+        } catch (error) {
+          console.warn("No se pudo leer localStorage", tab, error);
+        }
+      });
+    }
+
+    async function loadRepositoryData() {
+      await Promise.all(TAB_ORDER.map(loadRepositoryFile));
+      renderAll();
+    }
+
+    async function loadRepositoryFile(tab) {
+      const config = CONFIG[tab];
+      const url = REPOSITORY_DATA_FOLDER + encodeURIComponent(config.filename);
+
+      try {
+        setFileStatus(tab, "Cargando desde repositorio...", "");
+        const response = await fetch(url, { cache: "no-store" });
+        if (!response.ok) throw new Error("No encontrado");
+
+        const buffer = await response.arrayBuffer();
+        const wb = XLSX.read(new Uint8Array(buffer), { type: "array" });
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+        const missing = validateRows(tab, rows);
+
+        if (missing.length) {
+          setFileStatus(tab, "Error en repositorio: faltan columnas " + missing.join(", "), "bad");
+          return;
+        }
+
+        db[tab] = rows;
+        loadTimes[tab] = "Repositorio - " + new Date().toLocaleString("es-AR");
+        saveTab(tab);
+        setFileStatus(tab, "OK repositorio - " + rows.length + " filas", "ok");
+      } catch (error) {
+        const hasLocalData = db[tab].length > 0;
+        if (hasLocalData) {
+          setFileStatus(tab, "Usando datos guardados localmente. No se encontro " + config.filename + " en /data.", "ok");
+        } else {
+          setFileStatus(tab, "Pendiente: agregue /data/" + config.filename + " al repositorio o cargue manualmente.", "bad");
+        }
+      }
+    }
+
+    function setFileStatus(tab, message, state) {
+      const el = $("status_" + tab);
+      if (!el) return;
+      el.textContent = message;
+      el.className = "file-status" + (state ? " " + state : "");
+    }
+
+    function initials(name) {
+      return String(name || "U")
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part[0])
+        .join("")
+        .toUpperCase();
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      const userInput = normalize($("loginUser").value);
+      const rawUserInput = $("loginUser").value.trim().toUpperCase();
+      const password = $("loginPass").value;
+      let user = USERS.find((item) => normalize(item.id) === userInput && item.password === password);
+
+      if (!user && userInput && password === TEMPORARY_PORTAL_PASSWORD) {
+        user = {
+          id: rawUserInput,
+          password,
+          name: rawUserInput,
+          role: "Perfil operativo",
+          type: "operator",
+          scopes: [rawUserInput]
+        };
+      }
+
+      if (!user) {
+        $("loginError").style.display = "block";
+        return;
+      }
+
+      currentUser = user;
+      selectedScope = user.type === "admin" ? "*" : user.scopes[0];
+      document.body.classList.toggle("is-admin", user.type === "admin");
+      $("loginError").style.display = "none";
+      $("loginScreen").classList.add("hidden");
+      $("appScreen").classList.remove("hidden");
+      $("profileName").textContent = user.name;
+      $("profileRole").textContent = user.role;
+      $("avatar").textContent = initials(user.name);
+      $("userChip").innerHTML = '<i data-lucide="user-round"></i>' + escapeHtml(user.name);
+      $("visibleScope").textContent = user.type === "admin"
+        ? "Vista ADMIN: puede consultar todo o simular un contratista."
+        : "Solo informacion asignada a " + user.name + ".";
+
+      buildScopeSelect();
+      switchTab("dashboard");
+      renderAll();
+      refreshIcons();
+    }
+
+    function logout() {
+      currentUser = null;
+      selectedScope = "*";
+      activeTab = "dashboard";
+      currentPage = 1;
+      document.body.classList.remove("is-admin");
+      $("appScreen").classList.add("hidden");
+      $("loginScreen").classList.remove("hidden");
+      $("loginUser").focus();
+    }
+
+    function buildScopeSelect() {
+      const select = $("scopeSelect");
+      select.innerHTML = "";
+
+      if (!currentUser || currentUser.type !== "admin") return;
+
+      const options = [
+        ["*", "ADMIN - vista completa"],
+        ...collectAvailableScopes().map((scope) => [scope, scope])
+      ];
+
+      options.forEach(([value, label]) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = label;
+        select.appendChild(option);
+      });
+      select.value = selectedScope;
+    }
+
+    function collectAvailableScopes() {
+      const scopes = new Set();
+
+      TAB_ORDER.forEach((tab) => {
+        const fields = CONFIG[tab].scopeFields || [];
+        db[tab].forEach((row) => {
+          const centerAliases = tab === "transitos"
+            ? ["Centro Receptor"]
+            : ["Centro"];
+          const warehouseAliases = tab === "transitos"
+            ? ["Almacen Receptor", "Almacén Receptor"]
+            : ["Almacen", "Almacén"];
+          const center = String(getValue(row, centerAliases) || "").trim().toUpperCase();
+          const warehouse = String(getValue(row, warehouseAliases) || "").trim().toUpperCase();
+          if (center && warehouse) scopes.add(center + "-" + warehouse);
+
+          fields.forEach((aliases) => {
+            const value = String(getValue(row, aliases) || "").trim().toUpperCase();
+            if (value) scopes.add(value);
+          });
+        });
+      });
+
+      return Array.from(scopes).sort((a, b) => a.localeCompare(b, "es"));
+    }
+
+    function setNavActive(tab) {
+      document.querySelectorAll(".nav-btn[data-tab]").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.tab === tab);
+      });
+      $("tabSelect").value = tab;
+    }
+
+    function switchTab(tab) {
+      activeTab = tab;
+      currentPage = 1;
+      setNavActive(tab);
+      $("dashboardView").classList.toggle("hidden", tab !== "dashboard");
+      $("dataPanel").classList.toggle("hidden", tab === "dashboard" || tab === "carga");
+      $("cargaPanel").classList.toggle("hidden", tab !== "carga" && currentUser?.type !== "admin");
+
+      if (tab === "carga") {
+        $("dataPanel").classList.add("hidden");
+      }
+
+      renderAll();
+    }
+
+    function renderAll() {
+      if (!currentUser) return;
+      if (currentUser.type === "admin") buildScopeSelect();
+      renderDashboard();
+      renderFileList();
+      if (TAB_ORDER.includes(activeTab)) renderTable();
+
+      const scopeText = currentUser.type === "admin" && selectedScope === "*"
+        ? "Vista ADMIN completa"
+        : "Vista filtrada";
+      $("scopeChip").innerHTML = '<i data-lucide="shield-check"></i>' + scopeText;
+      refreshIcons();
+    }
+
+    function renderDashboard() {
+      const filtered = getAllFiltered();
+      $("kpiStock").textContent = filtered.stock.length;
+      $("kpiSerializables").textContent = filtered.serializables.length;
+      $("kpiTransitos").textContent = filtered.transitos.length;
+
+      const value = filtered.stock.reduce((sum, row) => {
+        return sum + parseNumber(getValue(row, ["Valor libre util.", "Valor libre util"]));
+      }, 0);
+      $("totalValue").textContent = formatMoney(value);
+
+      const loadedCount = TAB_ORDER.filter((tab) => db[tab].length > 0).length;
+      $("qualityNumber").textContent = loadedCount + "/5";
+      $("qualityBar").style.setProperty("--quality-width", (loadedCount / 5 * 100) + "%");
+      $("qualityText").textContent = loadedCount === 5
+        ? "Los cinco archivos SAP tienen datos cargados en este navegador."
+        : "Faltan " + (5 - loadedCount) + " archivos SAP para completar la vista.";
+    }
+
+    function renderFileList() {
+      const host = $("fileList");
+      host.innerHTML = TAB_ORDER.map((tab) => {
+        const config = CONFIG[tab];
+        const count = db[tab].length;
+        const statusClass = count ? "ok" : "bad";
+        const status = count
+          ? "OK - " + count + " filas - " + (loadTimes[tab] || "sin fecha")
+          : "Pendiente de carga";
+
+        return `
+          <div class="file-row">
+            <label>
+              <span>${escapeHtml(config.filename)}</span>
+              <span>${count ? "OK" : "Falta"}</span>
+            </label>
+            <input type="file" accept=".xlsx,.xls" data-file-tab="${tab}" />
+            <div class="file-status ${statusClass}" id="status_${tab}">${escapeHtml(status)}</div>
+          </div>
+        `;
+      }).join("");
+
+      host.querySelectorAll("input[type=file]").forEach((input) => {
+        input.addEventListener("change", (event) => loadExcel(event, input.dataset.fileTab));
+      });
+    }
+
+    function renderTable() {
+      const config = CONFIG[activeTab];
+      const rows = getFiltered(activeTab);
+      const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+      currentPage = Math.min(currentPage, totalPages);
+
+      $("tableTitle").textContent = config.title;
+      $("tableSubtitle").textContent = "Vista filtrada por usuario. La descarga respeta el mismo alcance.";
+      $("rowBadge").textContent = rows.length + " filas";
+      $("pagerInfo").textContent = "Pagina " + currentPage + " de " + totalPages;
+      $("prevPage").disabled = currentPage <= 1;
+      $("nextPage").disabled = currentPage >= totalPages;
+
+      if (!rows.length) {
+        $("tableWrap").innerHTML = '<div class="empty">Sin registros para esta vista, usuario o busqueda.</div>';
+        return;
+      }
+
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const pageRows = rows.slice(start, start + PAGE_SIZE);
+      const header = config.columns.map(([label]) => `<th>${escapeHtml(label)}</th>`).join("");
+      const body = pageRows.map((row) => {
+        const cells = config.columns.map(([label, aliases]) => {
+          const value = getValue(row, aliases);
+          const isNumber = ["Libre utilizacion", "Cantidad", "Valor libre util.", "Valor neto"].some((name) => normalize(name) === normalize(label));
+          const content = label === "Libre utilizacion"
+            ? stockStateCell(value)
+            : escapeHtml(value);
+          return `<td class="${isNumber ? "num" : ""}">${content}</td>`;
+        }).join("");
+        return `<tr>${cells}</tr>`;
+      }).join("");
+
+      $("tableWrap").innerHTML = `
+        <table>
+          <thead><tr>${header}</tr></thead>
+          <tbody>${body}</tbody>
+        </table>
+      `;
+    }
+
+    function stockStateCell(value) {
+      const qty = parseNumber(value);
+      const state = qty > 100 ? "Disponible" : "Revisar";
+      const className = qty > 100 ? "state" : "state warn";
+      return `${escapeHtml(value)} <span class="${className}">${state}</span>`;
+    }
+
+    function loadExcel(event, tab) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (loadEvent) => {
+        try {
+          const data = new Uint8Array(loadEvent.target.result);
+          const wb = XLSX.read(data, { type: "array" });
+          const sheet = wb.Sheets[wb.SheetNames[0]];
+          const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+          const missing = validateRows(tab, rows);
+
+          if (missing.length) {
+            $("status_" + tab).textContent = "Error: faltan columnas " + missing.join(", ");
+            $("status_" + tab).className = "file-status bad";
+            return;
+          }
+
+          db[tab] = rows;
+          loadTimes[tab] = new Date().toLocaleString("es-AR");
+          saveTab(tab);
+          renderAll();
+        } catch (error) {
+          $("status_" + tab).textContent = "Error al leer archivo: " + error.message;
+          $("status_" + tab).className = "file-status bad";
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function exportVisibleWorkbook() {
+      const filtered = getAllFiltered();
+      const wb = XLSX.utils.book_new();
+
+      TAB_ORDER.forEach((tab) => {
+        const rows = toExportRows(tab, filtered[tab]);
+        const ws = XLSX.utils.json_to_sheet(rows.length ? rows : [{}]);
+        XLSX.utils.book_append_sheet(wb, ws, sheetName(tab));
+      });
+
+      const namePart = currentUser.type === "admin" && selectedScope !== "*"
+        ? selectedScope
+        : currentUser.name;
+      const filename = "control-stock-" + normalize(namePart).replace(/[^A-Z0-9]+/g, "-").replace(/^-|-$/g, "") + ".xlsx";
+      XLSX.writeFile(wb, filename);
+    }
+
+    function sheetName(tab) {
+      const names = {
+        stock: "Stock",
+        serializables: "Serializables",
+        consumos: "Consumo materiales",
+        consumosSer: "Consumo series",
+        transitos: "Transito"
+      };
+      return names[tab];
+    }
+
+    function clearSearch() {
+      $("globalSearch").value = "";
+      currentPage = 1;
+      renderAll();
+    }
+
+    function bindEvents() {
+      $("loginForm").addEventListener("submit", handleLogin);
+      $("logoutBtn").addEventListener("click", logout);
+      $("globalSearch").addEventListener("input", () => {
+        currentPage = 1;
+        renderAll();
+      });
+      $("scopeSelect").addEventListener("change", () => {
+        selectedScope = $("scopeSelect").value;
+        currentPage = 1;
+        renderAll();
+      });
+      $("tabSelect").addEventListener("change", () => switchTab($("tabSelect").value));
+      $("clearSearchBtn").addEventListener("click", clearSearch);
+      $("prevPage").addEventListener("click", () => {
+        currentPage = Math.max(1, currentPage - 1);
+        renderTable();
+      });
+      $("nextPage").addEventListener("click", () => {
+        currentPage += 1;
+        renderTable();
+      });
+
+      document.querySelectorAll("[data-tab]").forEach((btn) => {
+        btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+      });
+      document.querySelectorAll("[data-tab-short]").forEach((btn) => {
+        btn.addEventListener("click", () => switchTab(btn.dataset.tabShort));
+      });
+      ["exportVisibleBtn", "sideExport", "heroExport", "sidebarExport"].forEach((id) => {
+        $(id).addEventListener("click", exportVisibleWorkbook);
+      });
+    }
+
+    function refreshIcons() {
+      if (window.lucide) {
+        window.lucide.createIcons({ attrs: { width: 16, height: 16 } });
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadSavedData();
+      bindEvents();
+      renderFileList();
+      loadRepositoryData();
+      refreshIcons();
+    });
+  </script>
+</body>
+</html>
