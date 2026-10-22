@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Control de Stock - Portal SAP</title>
+  <title>Personal · Portal de stock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <style>
@@ -794,78 +797,198 @@
         padding: 14px;
       }
     }
+
+    :root {
+      --bg: #f4f4fc;
+      --panel: #ffffff;
+      --panel-2: #f7f6ff;
+      --ink: #211b53;
+      --muted: #777493;
+      --line: #e4e2f0;
+      --nav: #211b59;
+      --nav-2: #332472;
+      --brand: #644de8;
+      --brand-dark: #4e35c3;
+      --green: #59d5dc;
+      --green-dark: #137d69;
+      --shadow: 0 14px 38px rgba(39, 26, 108, .10);
+    }
+    body { background: var(--bg); color: var(--ink); }
+    .login-screen {
+      position: relative; isolation: isolate; overflow: hidden;
+      background: radial-gradient(ellipse at 82% 20%, rgba(163, 75, 239, .78), transparent 42%),
+                  radial-gradient(ellipse at 15% 92%, rgba(36, 117, 255, .78), transparent 46%),
+                  linear-gradient(122deg, #2636b8 0%, #4328b1 48%, #7027cb 100%);
+      padding: 32px;
+    }
+    .login-screen::before, .login-screen::after {
+      content: ""; position: absolute; z-index: -1; border: 1px solid rgba(255,255,255,.15);
+      border-radius: 50%; pointer-events: none;
+    }
+    .login-screen::before { width: 600px; height: 600px; left: -250px; top: 14%; box-shadow: 0 0 0 22px rgba(255,255,255,.025), 0 0 0 46px rgba(255,255,255,.025); }
+    .login-screen::after { width: 780px; height: 780px; right: -350px; bottom: -48%; box-shadow: 0 0 0 26px rgba(255,255,255,.025), 0 0 0 52px rgba(255,255,255,.02); }
+    .login-card {
+      width: min(440px,100%); position:relative; z-index:1; padding:36px 34px 30px;
+      color:#fff; background:rgba(37,24,104,.48); border:1px solid rgba(255,255,255,.34);
+      border-top:1px solid rgba(255,255,255,.45); border-radius:22px;
+      box-shadow:0 24px 80px rgba(18,12,72,.24); backdrop-filter:blur(20px);
+    }
+    .login-head { margin-bottom:22px; text-align:left; }
+    .personal-wordmark {
+      display:inline-flex; align-items:center; padding:11px 16px; margin-bottom:25px;
+      background:#3b08a9; border-radius:11px 11px 11px 3px; box-shadow:0 8px 24px rgba(30,12,91,.2);
+    }
+    .personal-wordmark span { color:white; font-size:30px; line-height:1; font-weight:600; letter-spacing:-1.8px; }
+    .login-kicker { margin:0 0 8px !important; color:#d3ceff !important; font-size:10px !important; font-weight:700; letter-spacing:1.5px; }
+    .login-head h1 { margin:0 0 7px; font-size:27px; font-weight:600; letter-spacing:-.8px; }
+    .login-head p:last-child { font-size:13px; color:#e0dcff; }
+    .login-role { display:flex; width:max-content; margin:0 auto 22px; padding:4px; background:rgba(24,14,92,.35); border:1px solid rgba(255,255,255,.18); border-radius:24px; }
+    .login-role button { min-width:108px; border:0; border-radius:20px; background:transparent; color:#e8e4ff; padding:8px 14px; font-size:12px; }
+    .login-role button.selected { background:#fff; color:#342074; box-shadow:0 2px 8px rgba(20,13,67,.18); }
+    .login-card .field { margin-bottom:15px; gap:7px; }
+    .login-card .field span { color:#fff; text-transform:none; font-size:12px; font-weight:500; }
+    .login-card .field input { min-height:46px; border:1px solid rgba(255,255,255,.65); border-radius:10px; background:rgba(255,255,255,.97); color:#241d52; padding:11px 13px; }
+    .login-card .field input:focus { border-color:#fff; box-shadow:0 0 0 3px rgba(255,255,255,.18); }
+    .login-card .primary-btn { min-height:48px; border-radius:10px; margin-top:5px; background:linear-gradient(105deg,#5169f1,#7742df); box-shadow:0 10px 24px rgba(37,20,132,.22); }
+    .login-help { margin-top:18px; padding:0; background:none; color:#ddd8ff; font-size:10px; line-height:1.55; text-align:center; }
+    .login-error { background:#ffebee; color:#99223a; }
+    .app-shell { grid-template-columns:236px minmax(0,1fr); background:var(--bg); }
+    .sidebar { background:linear-gradient(180deg,#211b59 0%,#30216f 100%); border-right:0; padding:19px 13px 15px; color:#f8f7ff; gap:18px; }
+    .sidebar-brand { display:flex; align-items:center; gap:10px; padding:0 7px 17px; border-bottom:1px solid rgba(255,255,255,.14); }
+    .sidebar-brand-mark { width:38px; height:38px; border-radius:50%; display:grid; place-items:center; color:#fff; background:linear-gradient(145deg,#6552ed,#8852e8); font-size:23px; font-weight:600; letter-spacing:-2px; }
+    .sidebar-brand-name { font-size:18px; line-height:1; font-weight:600; letter-spacing:-.8px; }
+    .sidebar-brand-name small { display:block; margin-top:5px; color:#bdb7e3; font-size:8px; font-weight:500; letter-spacing:.8px; }
+    .profile { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.13); box-shadow:none; color:#fff; border-radius:12px; padding:12px; }
+    .avatar { background:linear-gradient(140deg,#22c5c9,#8cda8a); color:#19235a; }
+    .profile span { color:#c8c3e9; }
+    .section-title { color:#aaa5d4; font-size:10px; letter-spacing:1.1px; font-weight:700; text-transform:uppercase; }
+    .nav-list { gap:5px; }
+    .nav-btn { color:#dedaf5; border-radius:9px; padding:10px 11px; min-height:40px; }
+    .nav-btn:hover { background:rgba(255,255,255,.08); }
+    .nav-btn.active { color:#fff; background:rgba(255,255,255,.14); box-shadow:inset 3px 0 #51d3df; }
+    .main { min-width:0; }
+    .topbar { min-height:64px; padding:10px 24px; background:rgba(255,255,255,.94); border-bottom:1px solid var(--line); }
+    .search-box { border:1px solid var(--line); border-radius:10px; background:#fafaff; }
+    .search-box input { color:var(--ink); }
+    .chip { border:1px solid var(--line); border-radius:20px; background:#fff; color:var(--ink); }
+    .presence-chip { color:#287d65; background:#f2fbf7; }
+    .presence-dot { display:inline-block; width:7px; height:7px; margin-right:6px; border-radius:50%; background:#23ad7a; vertical-align:middle; box-shadow:0 0 0 3px #e1f5ed; }
+    .icon-btn, .secondary-btn { border:1px solid var(--line); border-radius:9px; background:#fff; color:var(--ink); }
+    .primary-btn { background:linear-gradient(105deg,#4f67ee,#7644df); border-radius:10px; box-shadow:0 8px 20px rgba(85,67,206,.18); }
+    .primary-btn:hover { filter:brightness(1.04); }
+    .content { padding:22px 24px 28px; }
+    .stock-value { border-radius:14px; background:linear-gradient(115deg,#5141c6 0%,#6538d3 55%,#8245df 100%); box-shadow:0 12px 24px rgba(75,54,183,.18); }
+    .stock-value::after { border-color:rgba(255,255,255,.16); }
+    .panel, .load-card, .export-card { border:1px solid var(--line); border-radius:13px; box-shadow:none; }
+    .panel-pad { padding:16px; }
+    .mini-card { background:#f8f8fe; border:1px solid var(--line); border-radius:10px; }
+    .quality-bar { background:#ececf5; }
+    .quality-bar div { background:linear-gradient(90deg,#29c2c7,#31a579); }
+    .filters { margin:20px 0 14px; align-items:end; }
+    .field span { color:#4f4a72; text-transform:none; letter-spacing:0; font-size:11px; }
+    .field input, .field select { border-color:var(--line); border-radius:9px; }
+    .table-panel { border-radius:13px; }
+    .table-head { border-bottom:1px solid #eeeef5; }
+    .table-wrap th { background:#fafaff; color:#706b8e; }
+    .table-wrap td { border-color:#f0eff6; }
+    .badge { background:#f0edff; color:#604bc9; }
+    .export-card { background:linear-gradient(160deg,#f8f6ff,#fff); }
+    .export-card h3, .load-card h3 { color:var(--ink); }
+    .file-row { border-color:#ecebf3; }
+    .file-status.ok { color:#188260; }
+    .activity-panel { padding:20px; margin-top:16px; }
+    .activity-heading { display:flex; justify-content:space-between; align-items:center; gap:16px; padding-bottom:15px; border-bottom:1px solid #efedf5; }
+    .activity-heading .eyebrow { display:block; color:#6d55d5; font-size:9px; font-weight:700; letter-spacing:1.4px; margin-bottom:6px; }
+    .activity-heading h2 { margin:0; font-size:20px; letter-spacing:-.4px; }
+    .activity-heading p { margin:5px 0 0; color:var(--muted); font-size:11px; }
+    .local-badge { white-space:nowrap; border:1px solid var(--line); border-radius:20px; background:#f8f7ff; padding:8px 11px; font-size:10px; color:#585378; }
+    .shared-presence { display:flex; align-items:center; gap:12px; padding:14px; margin:14px 0; border:1px solid var(--line); border-radius:11px; background:#faf9ff; }
+    .shared-presence-icon { width:34px; height:34px; flex:0 0 34px; display:grid; place-items:center; border-radius:10px; background:#eeebff; color:#604bca; }
+    .shared-presence strong { font-size:12px; }
+    .shared-presence p { margin:4px 0 0; color:var(--muted); font-size:10px; line-height:1.45; }
+    .pending-badge { margin-left:auto; white-space:nowrap; color:#746b96; background:#f0eff7; border-radius:18px; padding:6px 9px; font-size:9px; }
+    .activity-table-wrap { overflow-x:auto; }
+    .activity-table { width:100%; border-collapse:collapse; min-width:620px; }
+    .activity-table th { text-align:left; padding:11px 10px; color:#77738e; background:#fafaff; font-size:9px; letter-spacing:.6px; }
+    .activity-table td { padding:12px 10px; border-top:1px solid #f0eff6; font-size:11px; }
+    .activity-table td small { display:block; color:var(--muted); margin-top:3px; font-size:10px; }
+    .activity-empty { padding:34px 14px; text-align:center; color:var(--muted); font-size:12px; }
+    .activity-note { margin:14px 0 0; padding:10px 12px; border-left:3px solid #6c55d6; border-radius:0 8px 8px 0; background:#f5f3ff; color:#5f5a7b; font-size:10px; line-height:1.5; }
+    @media (max-width:1080px) {
+      .app-shell { grid-template-columns:1fr; }
+      .sidebar { display:flex; flex-direction:row; align-items:center; overflow-x:auto; padding:9px 12px; gap:10px; }
+      .sidebar-brand { border:0; padding:0 8px 0 0; }
+      .sidebar-brand-name, .sidebar-brand-name small { display:none; }
+      .profile { min-width:190px; }
+      .sidebar nav { min-width:max-content; }
+      .section-title { display:none; }
+      .nav-list { display:flex; }
+      .nav-btn { white-space:nowrap; }
+      .side-panel { grid-template-columns:1fr 1fr; }
+    }
+    @media (max-width:720px) {
+      .topbar { display:flex; flex-wrap:wrap; gap:9px; padding:10px 14px; }
+      .search-box { flex:1 1 100%; }
+      .top-actions { width:100%; justify-content:flex-end; }
+      .content { padding:14px; }
+      .filters { grid-template-columns:1fr; }
+      .side-panel { grid-template-columns:1fr; }
+      .activity-heading { align-items:flex-start; flex-direction:column; }
+      .shared-presence { align-items:flex-start; flex-wrap:wrap; }
+      .pending-badge { margin-left:46px; }
+      .login-card { padding:28px 24px 24px; }
+    }
+
+
+:root{--bg:#f7f7fc;--panel:#fff;--panel-2:#faf9ff;--ink:#201b53;--muted:#777491;--line:#e6e4f0;--nav:#211b59;--nav-2:#332374;--brand:#6550e8;--brand-dark:#4b33bb;--green:#59d5dc;--green-dark:#177f6d;--shadow:0 12px 34px rgba(40,27,108,.08)}
+body{background:var(--bg);color:var(--ink)}
+#loginScreen.login-screen{display:grid;grid-template-rows:56px 1fr;align-items:stretch;justify-items:stretch;gap:0;padding:5px;background:#171638;min-height:100vh}
+.proposal-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 18px;background:#171638;color:#fff}
+.proposal-header>strong{font-size:10px;letter-spacing:.65px;white-space:nowrap}.proposal-header nav{display:flex;gap:5px;overflow:auto}
+.proposal-step{padding:8px 12px;border:1px solid #ffffff33;border-radius:22px;color:#e3deff;font-size:10px;white-space:nowrap}.proposal-step.active{background:#fff;color:#261e67;border-color:#fff}
+#loginScreen .login-card{align-self:center;justify-self:center;width:min(430px,100%);padding:27px 28px 23px;color:#fff;background:linear-gradient(140deg,#7564d899,#824ecc9e);border:1px solid #ffffff70;border-radius:23px;box-shadow:0 23px 60px #150f513d;backdrop-filter:blur(17px)}
+#loginScreen .login-head{text-align:center;margin-bottom:19px}.personal-wordmark{display:inline-flex;align-items:center;gap:9px;margin:0 auto 19px;padding:11px 16px;border-radius:15px;background:#3b08a9;box-shadow:0 7px 20px #1f0c6133}
+.personal-wordmark span{font-size:22px;line-height:1;font-weight:600;letter-spacing:-1.1px}.personal-wordmark i,.sidebar-brand-name i{height:20px;width:1px;background:#ffffffd1}
+#loginScreen .login-head h1{margin:0 0 6px;font-size:17px;font-weight:600}#loginScreen .login-head p{margin:0;color:#e5e0ff;font-size:11px}
+#loginScreen .login-role{margin:0 auto 18px;padding:4px;border-radius:24px;background:#2f1d8b8f}#loginScreen .login-role button{min-width:98px;padding:8px 13px;border:0;border-radius:22px;background:transparent;color:#e8e4ff;font-size:12px}#loginScreen .login-role button.selected{background:#fff;color:#45328b}
+#loginScreen .field{gap:6px;margin-bottom:12px}#loginScreen .field span{color:#fff;text-transform:none;font-size:10px;font-weight:600}#loginScreen .field input{min-height:42px;border:1px solid #ffffffa6;border-radius:9px;background:#faf9ff;color:#28224f;font-size:12px}
+.login-options{display:flex;justify-content:space-between;align-items:center;margin:1px 3px 16px;color:#f1eeff;font-size:10px}.login-options label{display:flex;align-items:center;gap:6px}.login-options input{accent-color:#6550e8}.login-options .text-button{color:#f1eeff}
+#loginScreen .primary-btn{min-height:44px;border-radius:10px;background:linear-gradient(100deg,#4e69ef,#7643df);box-shadow:none}#loginScreen .login-help{margin:13px 0 0;padding:0;text-align:center;background:none;color:#e1dcff;font-size:9px;line-height:1.5}.support-line{margin:13px 0 0;text-align:center;color:#e8e4ff;font-size:9px}.support-line a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.app-shell{grid-template-columns:214px minmax(0,1fr);background:var(--bg)}.sidebar{background:linear-gradient(180deg,#211b59,#30216f);border:0;padding:15px 13px;color:#f9f8ff;gap:19px}
+.sidebar-brand{padding:11px 10px;border:0;border-radius:10px;background:#3e09ad;text-align:center}.sidebar-brand-name{color:#fff;font-size:15px;font-weight:600;letter-spacing:-.5px}.sidebar-brand-name i{display:inline-block;height:16px;margin:0 6px;vertical-align:-3px}
+.profile{background:#ffffff14;border:1px solid #ffffff24;box-shadow:none;border-radius:10px;color:#fff}.profile span{color:#c8c3e9}.section-title{color:#aaa5d4;font-size:9px;letter-spacing:1.1px;text-transform:uppercase}
+.nav-btn{min-height:40px;padding:9px 10px;border-radius:9px;color:#ddd9f4;font-size:12px}.nav-btn:hover{background:#ffffff14}.nav-btn.active{color:#fff;background:#ffffff24;box-shadow:inset 3px 0 #55d4df}
+.topbar{min-height:56px;padding:9px 20px;background:#fff;border-bottom:1px solid var(--line)}.breadcrumb{display:flex;align-items:center;gap:8px;color:#777491;font-size:10px}.breadcrumb b{color:#b7b3ca;font-weight:400}.breadcrumb strong{color:var(--ink);font-weight:600}.chip{border:1px solid var(--line);border-radius:22px;background:#fff;color:#59547c;font-size:9px}.top-actions{display:flex;align-items:center;gap:8px}
+.icon-btn,.secondary-btn{border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}.content{padding:22px 23px 30px}
+.filters{display:grid;grid-template-columns:minmax(190px,1.5fr) repeat(3,minmax(110px,.75fr)) auto;gap:9px;align-items:end;margin:0 0 14px}.filter-controls{display:contents}.filter-control{display:grid;gap:5px;min-width:0}.filter-control span{color:#77738f;font-size:8px;font-weight:700;letter-spacing:.6px;text-transform:uppercase}.filter-control input,.filter-control select,.scope-control select{width:100%;min-height:36px;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#625d81;font-size:10px}.scope-control{display:grid;gap:5px}.scope-control span{font-size:8px;color:#77738f}
+.search-box{min-height:38px;display:flex;align-items:center;gap:8px;padding:0 10px;border:1px solid var(--line);border-radius:9px;background:#fff;color:#77738f}.search-box input{width:100%;border:0;outline:0;background:transparent;font-size:11px}
+.dataset-tabs{display:flex;gap:4px;overflow:auto;margin:0 0 13px;border-bottom:1px solid var(--line)}.dataset-tab{padding:10px 11px;border:0;border-radius:9px 9px 0 0;background:transparent;color:#77738f;font-size:10px;white-space:nowrap}.dataset-tab.active{background:#f0edff;color:#4e3bc0;box-shadow:inset 0 0 0 1px #ded8ff}
+.work-grid{grid-template-columns:minmax(0,1fr)}.side-panel{display:none}.table-panel,.panel{border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:none}.table-head{padding:12px 14px;border-bottom:1px solid #efedf5}.table-title h2{font-size:13px}.table-title p{font-size:9px}.table-wrap{overflow:auto}.table-wrap th{position:sticky;top:0;background:#fafaff;color:#77738f;font-size:8px;letter-spacing:.4px}.table-wrap td{border-color:#efedf5;font-size:10px}.pager{min-height:46px;padding:9px 13px;color:var(--muted);font-size:9px}.badge{background:#f0edff;color:#5945c1}.primary-btn{min-height:38px;border-radius:9px;background:linear-gradient(100deg,#4d69ee,#7544df);box-shadow:0 7px 17px #5342c624;font-size:10px}
+.stock-value{border-radius:13px;background:linear-gradient(115deg,#5140c3,#683bd0 60%,#8248dc);box-shadow:0 10px 24px #452fa62b}.panel-pad{border-radius:12px}.mini-card{background:#faf9ff;border:1px solid var(--line);border-radius:9px}.quality-bar{background:#efedf5}.quality-bar div{background:linear-gradient(90deg,#43c8c1,#40a981)}
+.downloads-panel{padding:20px}.download-heading h1{margin:0;font-size:22px}.download-heading p{color:var(--muted);font-size:11px}.package-card{display:flex;align-items:center;gap:12px;padding:15px;margin:16px 0;border:1px solid #e1ddf6;border-radius:11px;background:linear-gradient(105deg,#f0edff,#faf8ff)}.package-icon,.download-icon{display:grid;place-items:center;border-radius:9px;background:linear-gradient(140deg,#5966eb,#8951e2);color:#fff}.package-icon{width:36px;height:36px}.package-card>div:nth-child(2){flex:1}.package-card strong{font-size:11px}.package-card p{margin:4px 0 0;color:var(--muted);font-size:9px}
+.download-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.download-row{display:grid;grid-template-columns:29px 1fr auto;gap:9px;align-items:center;padding:11px;border:1px solid var(--line);border-radius:9px;background:#fff}.download-row strong{font-size:10px}.download-row small{display:block;margin-top:4px;color:var(--muted);font-size:8px}.download-row button{height:30px;width:32px;border:1px solid var(--line);border-radius:8px;background:white;color:#6651d2}.download-icon{width:29px;height:29px;background:#f0edff;color:#6651d2}.download-footnote{color:var(--muted);font-size:9px}
+@media(max-width:1000px){.app-shell{grid-template-columns:1fr}.sidebar{display:flex;flex-direction:row;align-items:center;overflow:auto;padding:8px 12px;gap:10px}.sidebar-brand{white-space:nowrap}.profile{min-width:170px}.sidebar nav{min-width:max-content}.section-title{display:none}.nav-list{display:flex}.nav-btn{white-space:nowrap}.admin-navigation{padding:0;border:0}.sidebar-foot{display:none}.filters{grid-template-columns:repeat(3,minmax(110px,1fr))}.search-box{grid-column:span 2}}
+@media(max-width:700px){.proposal-header{align-items:flex-start;flex-direction:column;height:auto;padding:12px}.login-screen{grid-template-rows:auto 1fr}.login-card{padding:24px 20px}.sidebar-brand,.profile{display:none}.sidebar{padding:6px}.portal-navigation{width:100%}.portal-navigation .nav-list{justify-content:space-around}.nav-btn{padding:8px;font-size:10px}.admin-navigation{display:none}.topbar{padding:8px 11px}.top-actions .chip{display:none}.content{padding:15px 11px}.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.search-box{grid-column:1/-1}.hero-grid{grid-template-columns:1fr}.download-grid{grid-template-columns:1fr}.package-card{flex-wrap:wrap}.package-card>div:nth-child(2){min-width:calc(100% - 55px)}.package-card .primary-btn{width:100%}}
   </style>
 </head>
 <body>
-  <section id="loginScreen" class="login-screen">
-    <div class="login-card">
-      <div class="login-head">
-        <div class="logo">personal</div>
-        <h1>Control de Stock</h1>
-        <p>Portal Unificado SAP</p>
-      </div>
+<section id="loginScreen" class="login-screen">
+  <header class="proposal-header"><strong>PROPUESTA VISUAL · PORTAL DE STOCK</strong><nav><span class="proposal-step active">01 · Acceso</span><span class="proposal-step">02 · Información</span><span class="proposal-step">03 · Resumen</span><span class="proposal-step">04 · Descarga</span><span class="proposal-step">05 · Actividad</span></nav></header>
+  <div class="login-card"><div class="login-head"><div class="personal-wordmark"><span>telecom</span><i></i><span>personal</span></div><h1>Acceso</h1><p>Ingresá para continuar con tu operación</p></div>
+  <div class="login-role" role="group" aria-label="Tipo de usuario"><button type="button" id="roleContractor" class="selected" aria-pressed="true">Contratista</button><button type="button" id="roleTechnician" aria-pressed="false">Técnico</button></div>
+  <form id="loginForm"><label class="field"><span id="loginIdentityLabel">Almacén</span><input id="loginUser" type="text" placeholder="Ingresá tu almacén" autocomplete="username" required /></label><label class="field"><span>Contraseña</span><input id="loginPass" type="password" placeholder="Ingresá tu contraseña" autocomplete="current-password" required /></label>
+  <div class="login-options"><label><input type="checkbox" /> Recordarme</label><button type="button" class="text-button">¿Necesitás ayuda?</button></div><button class="primary-btn full" type="submit">Ingresar al portal <i data-lucide="arrow-right"></i></button></form>
+  <div id="loginError" class="login-error">No pudimos validar el acceso. Revisá el almacén o legajo y la contraseña.</div><p class="support-line">¿Tenés un comentario o sugerencia de mejora? <a href="mailto:blapenta@personal.com.ar">blapenta@personal.com.ar</a></p></div></section>
 
-      <form id="loginForm">
-        <label class="field">
-          <span>Usuario / Denominacion SAP</span>
-          <input id="loginUser" type="text" placeholder="Usuario asignado" autocomplete="username" required />
-        </label>
-        <label class="field">
-          <span>Contrasena</span>
-          <input id="loginPass" type="password" value="12345" autocomplete="current-password" required />
-        </label>
-        <button class="primary-btn full" type="submit">Ingresar al Portal</button>
-      </form>
-
-      <div class="login-help">
-        Acceso restringido por usuario. Contratistas ingresan por almacen o denominacion. Tecnicos propios pueden ingresar por centro-almacen.
-      </div>
-      <div id="loginError" class="login-error">Usuario o contrasena incorrectos.</div>
-    </div>
-  </section>
-
-  <section id="appScreen" class="app-shell hidden">
-    <aside class="sidebar">
-      <div class="profile">
-        <div id="avatar" class="avatar">A</div>
-        <div>
-          <strong id="profileName">ADMIN</strong>
-          <span id="profileRole">Administrador</span>
-        </div>
-      </div>
-
-      <nav>
-        <p class="section-title">Menu principal</p>
-        <div class="nav-list">
-          <button class="nav-btn active" data-tab="dashboard" type="button"><i data-lucide="layout-dashboard"></i>Dashboard</button>
-          <button class="nav-btn" data-tab="stock" type="button"><i data-lucide="boxes"></i>Stock</button>
-          <button class="nav-btn" data-tab="serializables" type="button"><i data-lucide="scan-barcode"></i>Serializables</button>
-          <button class="nav-btn" data-tab="consumos" type="button"><i data-lucide="trending-down"></i>Consumo materiales</button>
-          <button class="nav-btn" data-tab="consumosSer" type="button"><i data-lucide="list-checks"></i>Consumo serializables</button>
-          <button class="nav-btn" data-tab="transitos" type="button"><i data-lucide="truck"></i>Transito</button>
-        </div>
-      </nav>
-
-      <nav>
-        <p class="section-title">Administracion</p>
-        <div class="nav-list">
-          <button class="nav-btn" data-tab="carga" type="button"><i data-lucide="upload"></i>Carga SAP</button>
-          <button class="nav-btn" id="sidebarExport" type="button"><i data-lucide="download"></i>Mis Excel</button>
-        </div>
-      </nav>
-    </aside>
+    <section id="appScreen" class="app-shell hidden">
+<aside class="sidebar"><div class="sidebar-brand"><span class="sidebar-brand-name">telecom <i></i> personal</span></div>
+<div class="profile"><div id="avatar" class="avatar">A</div><div><strong id="profileName">ADMIN</strong><span id="profileRole">Administrador</span></div></div>
+<nav><p class="section-title">Portal</p><div class="nav-list"><button class="nav-btn active" data-tab="stock" type="button"><i data-lucide="database"></i>Información</button><button class="nav-btn" data-tab="dashboard" type="button"><i data-lucide="layout-dashboard"></i>Resumen</button><button class="nav-btn" data-tab="downloads" type="button"><i data-lucide="download"></i>Descarga</button><button class="nav-btn admin-only" data-tab="activity" type="button"><i data-lucide="activity"></i>Actividad</button></div></nav>
+<nav><p class="section-title">Administración</p><div class="nav-list"><button class="nav-btn admin-only" data-tab="carga" type="button"><i data-lucide="upload"></i>Actualizar archivos</button></div></nav><div class="sidebar-foot"><span class="presence-dot"></span>Sesión activa</div></aside>
 
     <main class="main">
       <header class="topbar">
-        <div class="search-box">
-          <i data-lucide="search"></i>
-          <input id="globalSearch" type="search" placeholder="Buscar material, serie, lote, almacen o documento" />
-        </div>
-        <div class="top-actions">
-          <span id="scopeChip" class="chip"><i data-lucide="shield-check"></i> Vista filtrada</span>
-          <span id="userChip" class="chip"><i data-lucide="user-round"></i> ADMIN</span>
-          <button id="logoutBtn" class="icon-btn" type="button" aria-label="Salir"><i data-lucide="log-out"></i></button>
-        </div>
+        <div class="breadcrumb"><span>Portal</span><b>/</b><strong id="breadcrumbTitle">Información</strong></div><div class="top-actions"><span id="presenceChip" class="chip presence-chip"><span class="presence-dot"></span>Vista según usuario</span><span id="scopeChip" class="chip"><i data-lucide="shield-check"></i>Vista filtrada</span><span id="userChip" class="chip"><i data-lucide="user-round"></i><span id="topUserName">ADMIN</span></span><button id="logoutBtn" class="icon-btn" type="button" aria-label="Salir"><i data-lucide="log-out"></i></button></div>
       </header>
 
       <section class="content">
@@ -901,25 +1024,9 @@
           </div>
         </div>
 
-        <div class="filters">
-          <label class="field admin-only">
-            <span>Contratista / tecnico</span>
-            <select id="scopeSelect"></select>
-          </label>
-          <label class="field">
-            <span>Vista activa</span>
-            <select id="tabSelect">
-              <option value="dashboard">Dashboard</option>
-              <option value="stock">Stock</option>
-              <option value="serializables">Serializables</option>
-              <option value="consumos">Consumo materiales</option>
-              <option value="consumosSer">Consumo serializables</option>
-              <option value="transitos">Transito</option>
-              <option value="carga">Carga SAP</option>
-            </select>
-          </label>
-          <button id="exportVisibleBtn" class="primary-btn" type="button"><i data-lucide="file-spreadsheet"></i>Descargar Excel</button>
-        </div>
+<div class="filters"><label class="search-box"><i data-lucide="search"></i><input id="globalSearch" type="search" placeholder="Buscar material, serie, lote o documento" /></label><div id="filterControls" class="filter-controls"></div><label class="field admin-only scope-control"><span>Vista de usuario</span><select id="scopeSelect"></select></label>
+<select id="tabSelect" class="hidden" aria-hidden="true"><option value="dashboard">Resumen</option><option value="stock">Stock total</option><option value="serializables">Serializables</option><option value="consumosSer">Consumos serializables</option><option value="consumos">Consumos</option><option value="transitos">Tránsitos</option><option value="downloads">Descarga</option><option value="carga">Actualizar archivos</option><option value="activity">Actividad</option><option value="downloads">Descarga</option></select></div>
+<nav id="datasetTabs" class="dataset-tabs"><button class="dataset-tab active" data-tab="stock" type="button">Stock total</button><button class="dataset-tab" data-tab="serializables" type="button">Serializables</button><button class="dataset-tab" data-tab="consumosSer" type="button">Consumos serializables</button><button class="dataset-tab" data-tab="consumos" type="button">Consumos</button><button class="dataset-tab" data-tab="transitos" type="button">Tránsitos</button></nav>
 
         <div class="work-grid">
           <section id="dataPanel" class="panel table-panel">
@@ -945,18 +1052,35 @@
 
           <aside class="side-panel">
             <article class="export-card">
-              <h3>Descarga para usuario logeado</h3>
-              <p>Genera un Excel con 5 hojas: stock, serializables, consumo materiales, consumo serializables y transito.</p>
-              <button id="sideExport" class="primary-btn full" type="button"><i data-lucide="download"></i>Descargar mi informacion</button>
+              <h3>Tu información, lista para llevar</h3>
+              <p>Descargá los datos visibles para tu usuario en un único archivo Excel con cinco hojas.</p>
+              <button id="sideExport" class="primary-btn full" type="button"><i data-lucide="download"></i>Descargar mi información</button>
             </article>
 
             <article id="cargaPanel" class="load-card">
-              <h3>Carga SAP</h3>
-              <p>Suba los archivos descargados de SAP. El portal valida columnas basicas y guarda la carga en este navegador.</p>
+              <h3>Archivos de información</h3>
+              <p>Podés cargarlos para esta sesión o mantenerlos en <code>data/</code> para que la página los lea al publicarse.</p>
               <div class="file-list" id="fileList"></div>
             </article>
           </aside>
         </div>
+
+<section id="downloadsPanel" class="panel downloads-panel hidden"><div class="download-heading"><span class="eyebrow">ARCHIVOS DISPONIBLES</span><h1>Tu información, lista para llevar</h1><p>Descargá todo en un Excel o elegí el conjunto que necesitás.</p></div><div class="package-card"><div class="package-icon"><i data-lucide="layers-3"></i></div><div><strong>Paquete completo de operación</strong><p>Las cinco fuentes en un único archivo Excel, filtradas según el usuario.</p></div><button id="exportVisibleBtn" class="primary-btn" type="button"><i data-lucide="download"></i>Descargar todo</button></div><div id="downloadFileList" class="download-grid"></div><p class="download-footnote"><i data-lucide="lock-keyhole"></i>La descarga se prepara con el alcance de la sesión.</p></section>
+
+        <section id="activityPanel" class="panel activity-panel hidden">
+          <div class="activity-heading">
+            <div><span class="eyebrow">SEGUIMIENTO</span><h2>Actividad y descargas</h2><p>Registro de las descargas realizadas desde este navegador.</p></div>
+            <span class="local-badge"><span class="presence-dot"></span>Registro local</span>
+          </div>
+          <div class="shared-presence">
+            <div class="shared-presence-icon"><i data-lucide="users-round"></i></div>
+            <div><strong>Usuarios en línea</strong><p>La lista compartida de contratistas y técnicos se activa al conectar la presencia con el servidor.</p></div>
+            <span class="pending-badge">Conexión pendiente</span>
+          </div>
+          <div id="activityTableWrap" class="activity-table-wrap"></div>
+          <div id="activityEmpty" class="activity-empty hidden">Todavía no hay descargas registradas en este navegador.</div>
+          <p class="activity-note">La presencia y el historial que compartan todos los usuarios requieren autenticación y almacenamiento en servidor. Esta vista es parte del prototipo.</p>
+        </section>
       </section>
     </main>
   </section>
@@ -974,6 +1098,8 @@
     ];
 
     const TEMPORARY_PORTAL_PASSWORD = "12345";
+    const ACTIVITY_STORAGE_KEY = "personal_stock_activity_demo_v1";
+    let loginType = "contractor";
 
     const CONFIG = {
       stock: {
@@ -1072,14 +1198,15 @@
       }
     };
 
-    const TAB_ORDER = ["stock", "serializables", "consumos", "consumosSer", "transitos"];
+    const TAB_ORDER = ["stock", "serializables", "consumosSer", "consumos", "transitos"];
+    const DATA_FILTERS = {stock:[{label:"Centro",key:"center",aliases:["Centro"],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén"],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Lote",key:"lot",aliases:["Lote"],kind:"text"}],serializables:[{label:"Centro",key:"center",aliases:["Centro"],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén"],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Lote",key:"lot",aliases:["Lote"],kind:"text"}],consumosSer:[{label:"Centro",key:"center",aliases:["Centro"],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén"],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Serie",key:"serial",aliases:["Numero de serie","Número de serie","Nº de Serie"],kind:"text"}],consumos:[{label:"Centro",key:"center",aliases:["Centro"],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén"],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Fecha",key:"date",aliases:["Fecha de entrada"],kind:"text"}],transitos:[{label:"Centro receptor",key:"center",aliases:["Centro Receptor"],kind:"select"},{label:"Almacén receptor",key:"warehouse",aliases:["Almacen Receptor","Almacén Receptor"],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Lote / PEP",key:"lot",aliases:["Lote/ Clase Valoracion","Lote/ Clase Valoración","Elemento PEP"],kind:"text"}]};
     const STORAGE_PREFIX = "portal_sap_v1_";
     const REPOSITORY_DATA_FOLDER = "data/";
     const PAGE_SIZE = 25;
 
     let currentUser = null;
     let selectedScope = "*";
-    let activeTab = "dashboard";
+    let activeTab = "stock";
     let currentPage = 1;
     let db = {
       stock: [],
@@ -1089,6 +1216,8 @@
       transitos: []
     };
     let loadTimes = {};
+    let technicianAssignments = [];
+    let repositoryDataReady = false;
 
     const $ = (id) => document.getElementById(id);
 
@@ -1162,14 +1291,9 @@
       const normalizedScopes = scopes.map(normalize).filter(Boolean);
       const fields = CONFIG[tab].scopeFields || [];
 
-      const compoundScope = normalizedScopes.find((scope) => scope.includes("-"));
-      if (compoundScope) {
-        return rowMatchesCenterWarehouse(tab, row, compoundScope);
-      }
-
-      return fields.some((aliases) => {
-        const value = normalize(getValue(row, aliases));
-        return normalizedScopes.some((scope) => value.includes(scope) || value === scope);
+      return normalizedScopes.some((scope) => {
+        if (/^RX\d{2,}-/.test(scope)) return rowMatchesCenterWarehouse(tab, row, scope);
+        return fields.some((aliases) => normalize(getValue(row, aliases)) === scope);
       });
     }
 
@@ -1193,10 +1317,21 @@
     }
 
     function rowMatchesSearch(tab, row) {
-      const query = normalize($("globalSearch").value);
-      if (!query) return true;
-      const haystack = CONFIG[tab].columns.map(([, aliases]) => normalize(getValue(row, aliases))).join(" ");
-      return haystack.includes(query);
+      const filtersVisible=TAB_ORDER.includes(tab)&&tab===activeTab&&!document.querySelector(".filters").classList.contains("hidden");
+      if(!filtersVisible)return true;
+      const query=normalize($("globalSearch").value);
+      if(query){
+        const haystack=CONFIG[tab].columns.map(([,aliases])=>normalize(getValue(row,aliases))).join(" ");
+        if(!haystack.includes(query))return false;
+      }
+      for(const filter of DATA_FILTERS[tab]||[]){
+        const control=document.querySelector('[data-filter-key="'+filter.key+'"]');
+        const value=normalize(control?.value||"");
+        if(!value)continue;
+        const cell=normalize(getValue(row,filter.aliases));
+        if(filter.kind==="select"?cell!==value:!cell.includes(value))return false;
+      }
+      return true;
     }
 
     function getFiltered(tab) {
@@ -1218,25 +1353,100 @@
     }
 
     function saveTab(tab) {
-      localStorage.setItem(STORAGE_PREFIX + tab, JSON.stringify(db[tab]));
-      localStorage.setItem(STORAGE_PREFIX + "time_" + tab, loadTimes[tab] || "");
+      // Los XLSX pueden superar la cuota de localStorage; se guardan solo sus fechas de carga.
+      try { localStorage.setItem(STORAGE_PREFIX + "time_" + tab, loadTimes[tab] || ""); } catch (error) {}
     }
 
     function loadSavedData() {
       TAB_ORDER.forEach((tab) => {
         try {
-          const data = localStorage.getItem(STORAGE_PREFIX + tab);
           const time = localStorage.getItem(STORAGE_PREFIX + "time_" + tab);
-          if (data) db[tab] = JSON.parse(data);
           if (time) loadTimes[tab] = time;
         } catch (error) {
-          console.warn("No se pudo leer localStorage", tab, error);
+          console.warn("No se pudo leer la fecha de carga", tab, error);
         }
       });
     }
 
+    function getActivityLog() {
+      try { return JSON.parse(localStorage.getItem(ACTIVITY_STORAGE_KEY) || "[]"); }
+      catch (error) { return []; }
+    }
+
+    function recordDownload(tabs) {
+      const selectedTabs=tabs||TAB_ORDER;
+      const log=getActivityLog();
+      log.unshift({
+        user:currentUser?.name||"Usuario",
+        role:currentUser?.role||"",
+        scope:currentUser?.type==="admin"?(selectedScope==="*"?"Vista completa":selectedScope):(currentUser?.scopes||[]).join(", "),
+        files:selectedTabs.map((tab)=>CONFIG[tab].title).join(", "),
+        sheets:selectedTabs.length,
+        timestamp:new Date().toISOString()
+      });
+      try{localStorage.setItem(ACTIVITY_STORAGE_KEY,JSON.stringify(log.slice(0,100)));}catch(error){}
+      renderActivity();
+    }
+
+    function renderActivity() {
+      const wrap = $("activityTableWrap");
+      const empty = $("activityEmpty");
+      if (!wrap || !empty) return;
+      const log = getActivityLog();
+      empty.classList.toggle("hidden", log.length > 0);
+      wrap.classList.toggle("hidden", log.length === 0);
+      wrap.innerHTML = log.length ? `
+        <table class="activity-table">
+          <thead><tr><th>USUARIO</th><th>ARCHIVO DESCARGADO</th><th>ALCANCE MOSTRADO</th><th>FECHA Y HORA</th></tr></thead>
+          <tbody>${log.map((entry) => `<tr>
+            <td><b>${escapeHtml(entry.user)}</b><small>${escapeHtml(entry.role)}</small></td>
+            <td>Paquete Excel · ${Number(entry.sheets) || 0} hojas<small>${escapeHtml(entry.files)}</small></td>
+            <td>${escapeHtml(entry.scope)}</td>
+            <td>${escapeHtml(new Date(entry.timestamp).toLocaleString("es-AR"))}</td>
+          </tr>`).join("")}</tbody>
+        </table>` : "";
+    }
+
+    async function loadTechnicianAssignments() {
+      technicianAssignments = [];
+      try {
+        const response = await fetch(REPOSITORY_DATA_FOLDER + "legajos.xlsx", { cache: "no-store" });
+        if (!response.ok) throw new Error("No se encontró data/legajos.xlsx");
+        const workbook = XLSX.read(new Uint8Array(await response.arrayBuffer()), { type: "array" });
+        workbook.SheetNames.forEach((sheetName) => {
+          const sheet = workbook.Sheets[sheetName];
+          const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+          const sheetCenter = /^RX\d{2}$/i.test(sheetName) ? normalize(sheetName) : "";
+          rows.forEach((row) => {
+            const legajo = normalize(getValue(row, ["Legajo"]));
+            const center = normalize(getValue(row, ["Centro"]) || sheetCenter);
+            const warehouse = normalize(getValue(row, ["Almacen", "Almacenes"]));
+            if (legajo && center && warehouse) technicianAssignments.push({ legajo, center, warehouse });
+          });
+        });
+      } catch (error) {
+        technicianAssignments = [];
+        console.warn("No se pudo cargar data/legajos.xlsx; se bloqueará el acceso técnico.", error);
+      }
+    }
+
+    function collectAvailableWarehouses() {
+      const warehouses = new Set();
+      TAB_ORDER.forEach((tab) => {
+        const aliases = tab === "transitos"
+          ? ["Almacen Receptor", "Almacén Receptor"]
+          : ["Almacen", "Almacén"];
+        db[tab].forEach((row) => {
+          const warehouse = normalize(getValue(row, aliases));
+          if (warehouse) warehouses.add(warehouse);
+        });
+      });
+      return warehouses;
+    }
+
     async function loadRepositoryData() {
-      await Promise.all(TAB_ORDER.map(loadRepositoryFile));
+      await Promise.all([...TAB_ORDER.map(loadRepositoryFile), loadTechnicianAssignments()]);
+      repositoryDataReady = TAB_ORDER.every((tab) => db[tab].length > 0);
       renderAll();
     }
 
@@ -1265,11 +1475,11 @@
         saveTab(tab);
         setFileStatus(tab, "OK repositorio - " + rows.length + " filas", "ok");
       } catch (error) {
-        const hasLocalData = db[tab].length > 0;
-        if (hasLocalData) {
-          setFileStatus(tab, "Usando datos guardados localmente. No se encontro " + config.filename + " en /data.", "ok");
+        const hasSessionData = db[tab].length > 0;
+        if (hasSessionData) {
+          setFileStatus(tab, "Archivo cargado en esta sesión. No se encontró " + config.filename + " en /data.", "ok");
         } else {
-          setFileStatus(tab, "Pendiente: agregue /data/" + config.filename + " al repositorio o cargue manualmente.", "bad");
+          setFileStatus(tab, "Pendiente: agregá /data/" + config.filename + " al repositorio o cargalo para esta sesión.", "bad");
         }
       }
     }
@@ -1291,25 +1501,61 @@
         .toUpperCase();
     }
 
+    function setLoginType(type) {
+      loginType = type;
+      const contractor = type === "contractor";
+      $("roleContractor").classList.toggle("selected", contractor);
+      $("roleTechnician").classList.toggle("selected", !contractor);
+      $("roleContractor").setAttribute("aria-pressed", String(contractor));
+      $("roleTechnician").setAttribute("aria-pressed", String(!contractor));
+      $("loginIdentityLabel").textContent = contractor ? "Almacén" : "Legajo";
+      $("loginUser").placeholder = contractor ? "Ingresá tu almacén" : "Ingresá tu número de legajo";
+    }
+
     function handleLogin(event) {
       event.preventDefault();
       const userInput = normalize($("loginUser").value);
-      const rawUserInput = $("loginUser").value.trim().toUpperCase();
       const password = $("loginPass").value;
-      let user = USERS.find((item) => normalize(item.id) === userInput && item.password === password);
+      let user = loginType === "contractor"
+        ? USERS.find((item) => item.type === "admin" && normalize(item.id) === userInput && item.password === password)
+        : null;
 
-      if (!user && userInput && password === TEMPORARY_PORTAL_PASSWORD) {
-        user = {
-          id: rawUserInput,
-          password,
-          name: rawUserInput,
-          role: "Perfil operativo",
-          type: "operator",
-          scopes: [rawUserInput]
-        };
+      if (!user && !repositoryDataReady) {
+        $("loginError").textContent = "La información del portal todavía no está lista. Revisá que los cinco archivos estén disponibles.";
+        $("loginError").style.display = "block";
+        return;
+      }
+
+      if (!user && password === TEMPORARY_PORTAL_PASSWORD && loginType === "contractor") {
+        if (collectAvailableWarehouses().has(userInput)) {
+          user = {
+            id: userInput,
+            password,
+            name: userInput,
+            role: "Contratista",
+            type: "contractor",
+            scopes: [userInput]
+          };
+        }
+      }
+
+      if (!user && password === TEMPORARY_PORTAL_PASSWORD && loginType === "technician") {
+        const assignments = technicianAssignments.filter((item) => item.legajo === userInput);
+        const scopes = [...new Set(assignments.map((item) => item.center + "-" + item.warehouse))];
+        if (scopes.length) {
+          user = {
+            id: userInput,
+            password,
+            name: "Legajo " + userInput,
+            role: "Técnico",
+            type: "technician",
+            scopes
+          };
+        }
       }
 
       if (!user) {
+        $("loginError").textContent = "No pudimos validar el acceso. Revisá el almacén o legajo y la contraseña.";
         $("loginError").style.display = "block";
         return;
       }
@@ -1317,6 +1563,7 @@
       currentUser = user;
       selectedScope = user.type === "admin" ? "*" : user.scopes[0];
       document.body.classList.toggle("is-admin", user.type === "admin");
+      $("loginError").textContent = "No pudimos validar el acceso. Revisá el almacén o legajo y la contraseña.";
       $("loginError").style.display = "none";
       $("loginScreen").classList.add("hidden");
       $("appScreen").classList.remove("hidden");
@@ -1326,10 +1573,10 @@
       $("userChip").innerHTML = '<i data-lucide="user-round"></i>' + escapeHtml(user.name);
       $("visibleScope").textContent = user.type === "admin"
         ? "Vista ADMIN: puede consultar todo o simular un contratista."
-        : "Solo informacion asignada a " + user.name + ".";
+        : "Solo información asignada a " + user.name + ".";
 
       buildScopeSelect();
-      switchTab("dashboard");
+      switchTab("stock");
       renderAll();
       refreshIcons();
     }
@@ -1399,31 +1646,38 @@
     }
 
     function switchTab(tab) {
+      const isDataset = TAB_ORDER.includes(tab);
       activeTab = tab;
       currentPage = 1;
       setNavActive(tab);
-      $("dashboardView").classList.toggle("hidden", tab !== "dashboard");
-      $("dataPanel").classList.toggle("hidden", tab === "dashboard" || tab === "carga");
-      $("cargaPanel").classList.toggle("hidden", tab !== "carga" && currentUser?.type !== "admin");
-
-      if (tab === "carga") {
-        $("dataPanel").classList.add("hidden");
-      }
-
+      document.querySelectorAll(".dataset-tab").forEach((button) => button.classList.toggle("active", button.dataset.tab === tab));
+      const views = {dashboardView:tab==="dashboard",dataPanel:isDataset,activityPanel:tab==="activity"&&currentUser?.type==="admin",downloadsPanel:tab==="downloads",cargaPanel:tab==="carga"&&currentUser?.type==="admin"};
+      Object.entries(views).forEach(([id,visible])=>$(id).classList.toggle("hidden",!visible));
+      document.querySelector(".filters").classList.toggle("hidden",!isDataset);
+      $("datasetTabs").classList.toggle("hidden",!isDataset);
+      document.querySelector(".work-grid").classList.toggle("hidden",!isDataset&&tab!=="carga");
+      document.querySelector(".side-panel").classList.toggle("hidden",tab!=="carga");
+      document.querySelector(".side-panel").style.display=tab==="carga"?"grid":"none";
+      const packageAction=document.querySelector(".export-card");if(packageAction)packageAction.classList.toggle("hidden",tab==="carga");
+      const titles={dashboard:"Resumen",downloads:"Descarga",activity:"Actividad",carga:"Actualizar archivos"};
+      $("breadcrumbTitle").textContent=isDataset?"Información":(titles[tab]||"Información");
+      if(isDataset)renderFilters();
+      if(tab==="activity")renderActivity();
+      if(tab==="downloads")renderDownloadCards();
       renderAll();
     }
 
     function renderAll() {
-      if (!currentUser) return;
-      if (currentUser.type === "admin") buildScopeSelect();
-      renderDashboard();
-      renderFileList();
-      if (TAB_ORDER.includes(activeTab)) renderTable();
-
-      const scopeText = currentUser.type === "admin" && selectedScope === "*"
-        ? "Vista ADMIN completa"
-        : "Vista filtrada";
-      $("scopeChip").innerHTML = '<i data-lucide="shield-check"></i>' + scopeText;
+      if(!currentUser)return;
+      if(currentUser.type==="admin")buildScopeSelect();
+      const activityOption=$("tabSelect").querySelector('option[value="activity"]');
+      activityOption.hidden=currentUser.type!=="admin";
+      activityOption.disabled=currentUser.type!=="admin";
+      renderDashboard();renderFileList();renderActivity();
+      if(TAB_ORDER.includes(activeTab))renderTable();
+      if(activeTab==="downloads")renderDownloadCards();
+      const scopeText=currentUser.type==="admin"&&selectedScope==="*"?"Vista ADMIN completa":"Vista según usuario";
+      $("scopeChip").innerHTML='<i data-lucide="shield-check"></i>'+scopeText;
       refreshIcons();
     }
 
@@ -1473,6 +1727,28 @@
       });
     }
 
+    function renderFilters() {
+      const host=$("filterControls");
+      if(!host)return;
+      const definitions=DATA_FILTERS[activeTab]||[];
+      const rows=db[activeTab].filter((row)=>rowMatchesScope(activeTab,row));
+      host.innerHTML=definitions.map((filter)=>{
+        if(filter.kind==="select"){
+          const values=Array.from(new Set(rows.map((row)=>String(getValue(row,filter.aliases)||"").trim()).filter(Boolean))).sort((a,b)=>a.localeCompare(b,"es"));
+          return '<label class="filter-control"><span>'+escapeHtml(filter.label)+'</span><select data-filter-key="'+filter.key+'"><option value="">Todos</option>'+values.map((value)=>'<option value="'+escapeHtml(value)+'">'+escapeHtml(value)+'</option>').join("")+'</select></label>';
+        }
+        return '<label class="filter-control"><span>'+escapeHtml(filter.label)+'</span><input type="search" data-filter-key="'+filter.key+'" placeholder="Todos" /></label>';
+      }).join("");
+      host.querySelectorAll("[data-filter-key]").forEach((control)=>{const update=()=>{currentPage=1;renderTable();};control.addEventListener("input",update);control.addEventListener("change",update);});
+    }
+
+    function renderDownloadCards() {
+      const host=$("downloadFileList");
+      if(!host)return;
+      host.innerHTML=TAB_ORDER.map((tab)=>'<article class="download-row"><span class="download-icon"><i data-lucide="file-spreadsheet"></i></span><div><strong>'+escapeHtml(CONFIG[tab].title)+'</strong><small>'+db[tab].length.toLocaleString("es-AR")+' filas en la fuente</small></div><button type="button" data-export-tab="'+tab+'" aria-label="Descargar '+escapeHtml(CONFIG[tab].title)+'"><i data-lucide="download"></i></button></article>').join("");
+      host.querySelectorAll("[data-export-tab]").forEach((button)=>button.addEventListener("click",()=>exportVisibleWorkbook(button.dataset.exportTab)));
+      refreshIcons();
+    }
     function renderTable() {
       const config = CONFIG[activeTab];
       const rows = getFiltered(activeTab);
@@ -1552,21 +1828,21 @@
       reader.readAsArrayBuffer(file);
     }
 
-    function exportVisibleWorkbook() {
-      const filtered = getAllFiltered();
-      const wb = XLSX.utils.book_new();
-
-      TAB_ORDER.forEach((tab) => {
-        const rows = toExportRows(tab, filtered[tab]);
-        const ws = XLSX.utils.json_to_sheet(rows.length ? rows : [{}]);
-        XLSX.utils.book_append_sheet(wb, ws, sheetName(tab));
+    function exportVisibleWorkbook(onlyTab) {
+      const tabs=onlyTab?[onlyTab]:TAB_ORDER;
+      if(!tabs.some((tab)=>db[tab].length)){alert("Todavía no hay archivos cargados para descargar.");return;}
+      const wb=XLSX.utils.book_new();
+      tabs.forEach((tab)=>{
+        const authorizedRows=db[tab].filter((row)=>rowMatchesScope(tab,row));
+        const rows=toExportRows(tab,authorizedRows);
+        const ws=XLSX.utils.json_to_sheet(rows.length?rows:[{}]);
+        XLSX.utils.book_append_sheet(wb,ws,sheetName(tab));
       });
-
-      const namePart = currentUser.type === "admin" && selectedScope !== "*"
-        ? selectedScope
-        : currentUser.name;
-      const filename = "control-stock-" + normalize(namePart).replace(/[^A-Z0-9]+/g, "-").replace(/^-|-$/g, "") + ".xlsx";
-      XLSX.writeFile(wb, filename);
+      const namePart=currentUser.type==="admin"&&selectedScope!=="*"?selectedScope:currentUser.name;
+      const suffix=onlyTab?"-"+normalize(onlyTab).toLowerCase():"";
+      const filename="personal-stock-"+normalize(namePart).replace(/[^A-Z0-9]+/g,"-").replace(/^-|-$/g,"")+suffix+".xlsx";
+      XLSX.writeFile(wb,filename);
+      recordDownload(tabs);
     }
 
     function sheetName(tab) {
@@ -1582,12 +1858,15 @@
 
     function clearSearch() {
       $("globalSearch").value = "";
-      currentPage = 1;
-      renderAll();
+      document.querySelectorAll("[data-filter-key]").forEach((control)=>{control.value="";});
+      currentPage=1;
+      renderTable();
     }
 
     function bindEvents() {
       $("loginForm").addEventListener("submit", handleLogin);
+      $("roleContractor").addEventListener("click", () => setLoginType("contractor"));
+      $("roleTechnician").addEventListener("click", () => setLoginType("technician"));
       $("logoutBtn").addEventListener("click", logout);
       $("globalSearch").addEventListener("input", () => {
         currentPage = 1;
@@ -1615,8 +1894,8 @@
       document.querySelectorAll("[data-tab-short]").forEach((btn) => {
         btn.addEventListener("click", () => switchTab(btn.dataset.tabShort));
       });
-      ["exportVisibleBtn", "sideExport", "heroExport", "sidebarExport"].forEach((id) => {
-        $(id).addEventListener("click", exportVisibleWorkbook);
+      ["exportVisibleBtn", "sideExport", "heroExport"].forEach((id) => {
+        $(id).addEventListener("click", () => exportVisibleWorkbook());
       });
     }
 
@@ -1628,6 +1907,7 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       loadSavedData();
+      setLoginType("contractor");
       bindEvents();
       renderFileList();
       loadRepositoryData();
