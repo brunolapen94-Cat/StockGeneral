@@ -1069,17 +1069,17 @@ body{background:var(--bg);color:var(--ink)}
 
         <section id="activityPanel" class="panel activity-panel hidden">
           <div class="activity-heading">
-            <div><span class="eyebrow">SEGUIMIENTO</span><h2>Actividad y descargas</h2><p>Registro de las descargas realizadas desde este navegador.</p></div>
+            <div><span class="eyebrow">SEGUIMIENTO</span><h2>Actividad y descargas</h2><p>Ingresos y descargas registrados en este navegador.</p></div>
             <span class="local-badge"><span class="presence-dot"></span>Registro local</span>
           </div>
           <div class="shared-presence">
             <div class="shared-presence-icon"><i data-lucide="users-round"></i></div>
-            <div><strong>Usuarios en línea</strong><p>La lista compartida de contratistas y técnicos se activa al conectar la presencia con el servidor.</p></div>
-            <span class="pending-badge">Conexión pendiente</span>
+            <div><strong>Usuarios en línea</strong><p>La presencia compartida se habilita al conectar el portal con un servidor.</p></div>
+            <span class="pending-badge">No disponible</span>
           </div>
           <div id="activityTableWrap" class="activity-table-wrap"></div>
-          <div id="activityEmpty" class="activity-empty hidden">Todavía no hay descargas registradas en este navegador.</div>
-          <p class="activity-note">La presencia y el historial que compartan todos los usuarios requieren autenticación y almacenamiento en servidor. Esta vista es parte del prototipo.</p>
+          <div id="activityEmpty" class="activity-empty hidden">Todavía no hay ingresos ni descargas registrados en este navegador.</div>
+          <p class="activity-note">Este registro se guarda en este navegador. La actividad compartida entre usuarios y la presencia en línea requieren almacenamiento en servidor.</p>
         </section>
       </section>
     </main>
@@ -1375,8 +1375,8 @@ body{background:var(--bg);color:var(--ink)}
 
     function recordDownload(tabs) {
       const selectedTabs=tabs||TAB_ORDER;
-      const log=getActivityLog();
-      log.unshift({
+      addActivity({
+        action: "Descarga",
         user:currentUser?.name||"Usuario",
         role:currentUser?.role||"",
         scope:currentUser?.type==="admin"?(selectedScope==="*"?"Vista completa":selectedScope):(currentUser?.scopes||[]).join(", "),
@@ -1384,6 +1384,23 @@ body{background:var(--bg);color:var(--ink)}
         sheets:selectedTabs.length,
         timestamp:new Date().toISOString()
       });
+    }
+
+    function recordLogin(user) {
+      addActivity({
+        action: "Ingreso",
+        user: user.name,
+        role: user.role,
+        scope: user.type === "admin" ? "Vista completa" : (user.scopes || []).join(", "),
+        files: "—",
+        sheets: 0,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    function addActivity(entry) {
+      const log=getActivityLog();
+      log.unshift(entry);
       try{localStorage.setItem(ACTIVITY_STORAGE_KEY,JSON.stringify(log.slice(0,100)));}catch(error){}
       renderActivity();
     }
@@ -1397,10 +1414,10 @@ body{background:var(--bg);color:var(--ink)}
       wrap.classList.toggle("hidden", log.length === 0);
       wrap.innerHTML = log.length ? `
         <table class="activity-table">
-          <thead><tr><th>USUARIO</th><th>ARCHIVO DESCARGADO</th><th>ALCANCE MOSTRADO</th><th>FECHA Y HORA</th></tr></thead>
+          <thead><tr><th>USUARIO</th><th>ACTIVIDAD</th><th>ALCANCE</th><th>FECHA Y HORA</th></tr></thead>
           <tbody>${log.map((entry) => `<tr>
             <td><b>${escapeHtml(entry.user)}</b><small>${escapeHtml(entry.role)}</small></td>
-            <td>Paquete Excel · ${Number(entry.sheets) || 0} hojas<small>${escapeHtml(entry.files)}</small></td>
+            <td>${escapeHtml(entry.action || "Descarga")}${entry.action === "Ingreso" ? " al portal" : ` · ${Number(entry.sheets) || 0} hojas`}<small>${escapeHtml(entry.files)}</small></td>
             <td>${escapeHtml(entry.scope)}</td>
             <td>${escapeHtml(new Date(entry.timestamp).toLocaleString("es-AR"))}</td>
           </tr>`).join("")}</tbody>
@@ -1561,6 +1578,7 @@ body{background:var(--bg);color:var(--ink)}
       }
 
       currentUser = user;
+      recordLogin(user);
       selectedScope = user.type === "admin" ? "*" : user.scopes[0];
       document.body.classList.toggle("is-admin", user.type === "admin");
       $("loginError").textContent = "No pudimos validar el acceso. Revisá el almacén o legajo y la contraseña.";
