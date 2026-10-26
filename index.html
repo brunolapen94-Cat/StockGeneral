@@ -1102,47 +1102,47 @@ body{background:var(--bg);color:var(--ink)}
         columns: [
           ["Material", ["Material"]],
           ["Texto breve", ["Texto breve de material", "Texto breve material", "Texto breve", "Denominacion"]],
-          ["Centro", ["Centro"]],
-          ["Almacen", ["Almacen", "Almacén"]],
+          ["Centro", ["Centro", "Ce."]],
+          ["Almacen", ["Almacen", "Almacén", "Alm."]],
           ["Lote", ["Lote"]],
-          ["Libre utilizacion", ["Libre utilizacion", "Libre utilización"]],
-          ["UM", ["Unidad medida base", "UM"]],
-          ["Denominacion almacen", ["Denominacion almacen", "Denominación almacén"]],
+          ["Libre utilizacion", ["Libre utilizacion", "Libre utilización", "LibrUtiliz"]],
+          ["UM", ["Unidad medida base", "UM", "UMB"]],
+          ["Denominacion almacen", ["Denominacion almacen", "Denominación almacén", "Denom.almacén"]],
           ["Numero stock especial", ["Numero de stock especial", "Número de stock especial", "Nº stock especial"]],
           ["Valor libre util.", ["Valor libre util.", "Valor libre util"]],
           ["Moneda", ["Moneda"]]
         ],
-        scopeFields: [["Denominacion almacen", "Denominación almacén"], ["Almacen", "Almacén"], ["Numero de stock especial", "Número de stock especial", "Nº stock especial"]]
+        scopeFields: [["Denominacion almacen", "Denominación almacén", "Denom.almacén"], ["Almacen", "Almacén", "Alm."], ["Numero de stock especial", "Número de stock especial", "Nº stock especial"]]
       },
       serializables: {
         title: "Equipos serializables en stock",
         filename: "serializables.xlsx",
         required: ["Material", "Almacen"],
         columns: [
-          ["Centro", ["Centro"]],
-          ["Almacen", ["Almacen", "Almacén"]],
+          ["Centro", ["Centro", "Ce."]],
+          ["Almacen", ["Almacen", "Almacén", "Alm."]],
           ["Material", ["Material"]],
-          ["Denominacion", ["Denominacion", "Denominación"]],
-          ["Numero de serie", ["Numero de serie", "Número de serie", "Nº de Serie"]],
+          ["Denominacion", ["Denominacion", "Denominación", "Texto breve de material"]],
+          ["Numero de serie", ["Numero de serie", "Número de serie", "Nº de Serie", "Nº serie"]],
           ["Lote", ["Lote"]]
         ],
-        scopeFields: [["Almacen", "Almacén"], ["Denominacion almacen", "Denominación almacén"]]
+        scopeFields: [["Almacen", "Almacén", "Alm."], ["Denominacion almacen", "Denominación almacén", "Denom.almacén"]]
       },
       consumos: {
         title: "Consumo de materiales",
         filename: "consumos.xlsx",
         required: ["Material", "Almacen"],
         columns: [
-          ["Centro", ["Centro"]],
-          ["Almacen", ["Almacen", "Almacén"]],
+          ["Centro", ["Centro", "Ce."]],
+          ["Almacen", ["Almacen", "Almacén", "Alm."]],
           ["Material", ["Material"]],
           ["Texto breve", ["Texto breve de material", "Texto breve material", "Texto breve"]],
           ["Cantidad", ["Cantidad"]],
-          ["Fecha entrada", ["Fecha de entrada"]],
+          ["Fecha entrada", ["Fecha de entrada", "Registrado el"]],
           ["Texto", ["Texto"]],
-          ["Hora", ["Hora de entrada"]]
+          ["Hora", ["Hora de entrada", "Hora"]]
         ],
-        scopeFields: [["Almacen", "Almacén"], ["Denominacion almacen", "Denominación almacén"]]
+        scopeFields: [["Almacen", "Almacén", "Alm."], ["Denominacion almacen", "Denominación almacén", "Denom.almacén"]]
       },
       consumosSer: {
         title: "Consumo de equipos serializables",
@@ -1150,49 +1150,49 @@ body{background:var(--bg);color:var(--ink)}
         required: ["Material", "Almacen"],
         columns: [
           ["ID Open", ["ID Open"]],
-          ["Doc. Mat.", ["Documento material"]],
-          ["Ejerc.", ["Ejerc.documento mat."]],
+          ["Doc. Mat.", ["Documento material", "Doc.mat."]],
+          ["Ejerc.", ["Ejerc.documento mat.", "Ej.mat."]],
           ["Posicion", ["Posicion", "Posición"]],
-          ["Centro", ["Centro"]],
-          ["Almacen", ["Almacen", "Almacén"]],
+          ["Centro", ["Centro", "Ce."]],
+          ["Almacen", ["Almacen", "Almacén", "Alm."]],
           ["Material", ["Material"]],
-          ["Numero de serie", ["Numero de serie", "Número de serie", "Nº de Serie"]],
-          ["F. Contab.", ["Fe.contabilización", "Fe.contabilizacion"]],
-          ["Fecha entrada", ["Fecha de entrada"]],
+          ["Numero de serie", ["Numero de serie", "Número de serie", "Nº de Serie", "Nº serie"]],
+          ["F. Contab.", ["Fe.contabilización", "Fe.contabilizacion", "Fe.contab."]],
+          ["Fecha entrada", ["Fecha de entrada", "Registrado"]],
           ["Texto", ["Texto"]],
           ["Cantidad", ["Cantidad"]],
-          ["Movimiento", ["Clase de Movimiento"]],
-          ["Documento inventario", ["Documento de inventario"]]
+          ["Movimiento", ["Clase de Movimiento", "Cla. de Mo"]],
+          ["Documento inventario", ["Documento de inventario", "Doc. inv."]]
         ],
-        scopeFields: [["Almacen", "Almacén"], ["Denominacion almacen", "Denominación almacén"]]
+        scopeFields: [["Almacen", "Almacén", "Alm."], ["Denominacion almacen", "Denominación almacén", "Denom.almacén"]]
       },
       transitos: {
         title: "Materiales en transito",
         filename: "transitos.xlsx",
         required: ["Material", "Almacen Receptor"],
         columns: [
-          ["Fecha transito", ["Fecha Transito", "Fecha Tránsito"]],
-          ["Doc. Mat.", ["Documento material"]],
-          ["Referencia", ["Su referencia", "Referencia"]],
-          ["Centro emisor", ["Centro Emisor"]],
-          ["Centro receptor", ["Centro Receptor"]],
-          ["Almacen receptor", ["Almacen Receptor", "Almacén Receptor"]],
+          ["Fecha transito", ["Fecha Transito", "Fecha Tránsito", "Fecha Tran"]],
+          ["Doc. Mat.", ["Documento material", "Doc.mat."]],
+          ["Referencia", ["Su referencia", "Referencia", "Ref.1"]],
+          ["Centro emisor", ["Centro Emisor", "CeSuminist"]],
+          ["Centro receptor", ["Centro Receptor", "Centro Rec"]],
+          ["Almacen receptor", ["Almacen Receptor", "Almacén Receptor", "Almacen Re"]],
           ["Material", ["Material"]],
           ["Texto breve", ["Texto breve material", "Texto breve de material", "Texto breve"]],
-          ["Lote/ Clase Valoracion", ["Lote/ Clase Valoracion", "Lote/ Clase Valoración"]],
+          ["Lote/ Clase Valoracion", ["Lote/ Clase Valoracion", "Lote/ Clase Valoración", "Lote/ Clas"]],
           ["Cantidad", ["Cantidad"]],
           ["Precio unitario", ["Precio Unitario"]],
           ["Valor neto", ["Valor neto"]],
           ["Elemento PEP", ["Elemento PEP"]],
           ["Stock especial", ["Stock especial"]],
-          ["Documento compras", ["Documento compras"]]
+          ["Documento compras", ["Documento compras", "Doc.compr."]]
         ],
-        scopeFields: [["Almacen Receptor", "Almacén Receptor"], ["Stock especial"], ["Elemento PEP"], ["Denominacion almacen", "Denominación almacén"]]
+        scopeFields: [["Almacen Receptor", "Almacén Receptor", "Almacen Re"], ["Stock especial"], ["Elemento PEP"], ["Denominacion almacen", "Denominación almacén", "Denom.almacén"]]
       }
     };
 
     const TAB_ORDER = ["stock", "serializables", "consumosSer", "consumos", "transitos"];
-    const DATA_FILTERS = {stock:[{label:"Centro",key:"center",aliases:["Centro"],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén"],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Lote",key:"lot",aliases:["Lote"],kind:"text"}],serializables:[{label:"Centro",key:"center",aliases:["Centro"],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén"],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Lote",key:"lot",aliases:["Lote"],kind:"text"}],consumosSer:[{label:"Centro",key:"center",aliases:["Centro"],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén"],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Serie",key:"serial",aliases:["Numero de serie","Número de serie","Nº de Serie"],kind:"text"}],consumos:[{label:"Centro",key:"center",aliases:["Centro"],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén"],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Fecha",key:"date",aliases:["Fecha de entrada"],kind:"text"}],transitos:[{label:"Centro receptor",key:"center",aliases:["Centro Receptor"],kind:"select"},{label:"Almacén receptor",key:"warehouse",aliases:["Almacen Receptor","Almacén Receptor"],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Lote / PEP",key:"lot",aliases:["Lote/ Clase Valoracion","Lote/ Clase Valoración","Elemento PEP"],kind:"text"}]};
+    const DATA_FILTERS = {stock:[{label:"Centro",key:"center",aliases:["Centro","Ce."],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén","Alm."],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Lote",key:"lot",aliases:["Lote"],kind:"text"}],serializables:[{label:"Centro",key:"center",aliases:["Centro","Ce."],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén","Alm."],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Lote",key:"lot",aliases:["Lote"],kind:"text"}],consumosSer:[{label:"Centro",key:"center",aliases:["Centro","Ce."],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén","Alm."],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Serie",key:"serial",aliases:["Numero de serie","Número de serie","Nº de Serie","Nº serie"],kind:"text"}],consumos:[{label:"Centro",key:"center",aliases:["Centro","Ce."],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén","Alm."],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Fecha",key:"date",aliases:["Fecha de entrada"],kind:"text"}],transitos:[{label:"Centro receptor",key:"center",aliases:["Centro Receptor", "Centro Rec"],kind:"select"},{label:"Almacén receptor",key:"warehouse",aliases:["Almacen Receptor","Almacén Receptor","Almacen Re"],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Lote / PEP",key:"lot",aliases:["Lote/ Clase Valoracion","Lote/ Clase Valoración","Lote/ Clas","Elemento PEP"],kind:"text"}]};
     const STORAGE_PREFIX = "portal_sap_v1_";
     const PAGE_SIZE = 25;
 
@@ -1295,11 +1295,11 @@ body{background:var(--bg);color:var(--ink)}
       const center = parts[0];
       const warehouse = parts.slice(1).join("-");
       const centerAliases = tab === "transitos"
-        ? ["Centro Receptor"]
+        ? ["Centro Receptor", "Centro Rec"]
         : ["Centro"];
       const warehouseAliases = tab === "transitos"
-        ? ["Almacen Receptor", "Almacén Receptor"]
-        : ["Almacen", "Almacén"];
+        ? ["Almacen Receptor", "Almacén Receptor", "Almacen Re"]
+        : ["Almacen", "Almacén", "Alm."];
 
       const rowCenter = normalize(getValue(row, centerAliases));
       const rowWarehouse = normalize(getValue(row, warehouseAliases));
@@ -1489,8 +1489,8 @@ body{background:var(--bg);color:var(--ink)}
         } else if (password === "12345" && loginType === "contractor") {
           const codes = new Set();
           TAB_ORDER.forEach((tab) => db[tab].forEach((row) => {
-            const code = normalize(getValue(row, tab === "transitos" ? ["Almacen Receptor", "Almacén Receptor"] : ["Almacen", "Almacén"]));
-            const name = normalize(getValue(row, ["Denominacion almacen", "Denominación almacén"]));
+            const code = normalize(getValue(row, tab === "transitos" ? ["Almacen Receptor", "Almacén Receptor", "Almacen Re"] : ["Almacen", "Almacén", "Alm."]));
+            const name = normalize(getValue(row, ["Denominacion almacen", "Denominación almacén", "Denom.almacén"]));
             if (code && (identity === code || (name && identity === name))) codes.add(code);
           }));
           if (codes.size) user = { id:identity, name:identity, role:"Contratista", type:"contractor", scopes:[...codes] };
@@ -1592,11 +1592,11 @@ body{background:var(--bg);color:var(--ink)}
         const fields = CONFIG[tab].scopeFields || [];
         db[tab].forEach((row) => {
           const centerAliases = tab === "transitos"
-            ? ["Centro Receptor"]
+            ? ["Centro Receptor", "Centro Rec"]
             : ["Centro"];
           const warehouseAliases = tab === "transitos"
-            ? ["Almacen Receptor", "Almacén Receptor"]
-            : ["Almacen", "Almacén"];
+            ? ["Almacen Receptor", "Almacén Receptor", "Almacen Re"]
+            : ["Almacen", "Almacén", "Alm."];
           const center = String(getValue(row, centerAliases) || "").trim().toUpperCase();
           const warehouse = String(getValue(row, warehouseAliases) || "").trim().toUpperCase();
           if (center && warehouse) scopes.add(center + "-" + warehouse);
