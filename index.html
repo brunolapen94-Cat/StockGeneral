@@ -1378,39 +1378,74 @@ body{background:var(--bg);color:var(--ink)}
         </table>` : "";
     }
 
+    function getLocalActivity() {
+      try { return JSON.parse(localStorage.getItem("portal_activity_testing_v1") || "[]"); } catch (error) { return []; }
+    }
+    function saveLocalActivity(entry) {
+      const log = getLocalActivity(); log.unshift(entry);
+      try { localStorage.setItem("portal_activity_testing_v1", JSON.stringify(log.slice(0, 250))); } catch (error) {}
+      activityCache = getLocalActivity(); renderActivity();
+    }
     async function refreshActivity() {
       if (currentUser?.type !== "admin") return;
-      const response = await fetch("/api/activity", { credentials: "same-origin", cache: "no-store" });
-      if (!response.ok) throw new Error("No se pudo consultar la actividad compartida.");
-      const result = await response.json();
-      activityCache = result.activity || [];
-      renderActivity();
+      activityCache = getLocalActivity(); renderActivity();
     }
-
+    function getLocalPresence() {
+      try { return JSON.parse(localStorage.getItem("portal_presence_testing_v1") || "[]"); } catch (error) { return []; }
+    }
     async function refreshPresence() {
       if (currentUser?.type !== "admin") return;
-      const response = await fetch("/api/presence", { credentials: "same-origin", cache: "no-store" });
-      if (!response.ok) return;
-      const result = await response.json();
-      const users = result.users || [];
-      $("presenceCount").textContent = `${users.length} activo${users.length === 1 ? "" : "s"}`;
-      const viewLabels = { dashboard: "Resumen", stock: "Stock total", serializables: "Serializables", consumosSer: "Consumos serializables", consumos: "Consumos", transitos: "Tránsitos", downloads: "Descarga", activity: "Actividad", portal: "Portal" };
+      const users = getLocalPresence().filter((person) => Number(person.updatedAt) > Date.now() - 90000);
+      try { localStorage.setItem("portal_presence_testing_v1", JSON.stringify(users)); } catch (error) {}
+      const labels = { dashboard: "Resumen", stock: "Stock total", serializables: "Serializables", consumosSer: "Consumos serializables", consumos: "Consumos", transitos: "Tránsitos", downloads: "Descarga", activity: "Actividad", portal: "Portal" };
+      $("presenceCount").textContent = `${users.length} activo${users.length === 1 ? "" : "s"} · local`;
       $("onlineUsersList").innerHTML = users.length ? users.map((person) =>
-        `<span class="online-user"><b>${escapeHtml(person.user_name)} · ${escapeHtml(viewLabels[person.current_view] || person.current_view)}</b><small>${escapeHtml(person.role)} · ${escapeHtml(person.scope)}</small></span>`
-      ).join("") : '<span class="online-user-empty">No hay sesiones activas.</span>';
+        `<span class="online-user"><b>${escapeHtml(person.name)} · ${escapeHtml(labels[person.view] || person.view || "Portal")}</b><small>${escapeHtml(person.role)} · ${escapeHtml(person.scope)}</small></span>`
+      ).join("") : '<span class="online-user-empty">Sin sesiones activas en este navegador.</span>';
     }
 
     async function loadRepositoryData() {
       const results = await Promise.all(TAB_ORDER.map(async (tab) => {
-        const response = await fetch(`/api/data?tab=${encodeURIComponent(tab)}`, { credentials: "same-origin", cache: "no-store" });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || `No se pudo cargar ${CONFIG[tab].title}.`);
-        db[tab] = result.rows || [];
-        loadTimes[tab] = new Date().toLocaleString("es-AR");
-        setFileStatus(tab, `Servidor privado · ${db[tab].length} filas`, "ok");
+        const config = CONFIG[tab];
+        try {
+          setFileStatus(tab, "Leyendo desde GitHub/Vercel…", "");
+          const response = await fetch("data/" + encodeURIComponent(config.filename), { cache: "no-store" });
+          if (!response.ok) throw new Error("HTTP " + response.status);
+          const workbook = XLSX.read(new Uint8Array(await response.arrayBuffer()), { type: "array" });
+          const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { defval: "" });
+          const missing = validateRows(tab, rows);
+          if (missing.length) throw new Error("Faltan columnas: " + missing.join(", "));
+          if (!rows.length) throw new Error("El archivo no tiene filas.");
+          db[tab] = rows; loadTimes[tab] = new Date().toLocaleString("es-AR");
+          setFileStatus(tab, "OK · " + rows.length.toLocaleString("es-AR") + " filas", "ok");
+          return { tab, ok: true };
+        } catch (error) {
+          db[tab] = [];
+          setFileStatus(tab, "No se pudo leer data/" + config.filename + " (" + error.message + ")", "bad");
+          return { tab, ok: false, error };
+        }
       }));
-      renderAll();
+      await loadTechnicianAssignments(); renderAll();
+      const failed = results.filter((item) => !item.ok);
+      if (failed.length) throw new Error("No se pudieron cargar los cinco Excel. Revisá la sección de archivos: " + failed.map((item) => CONFIG[item.tab].filename).join(", "));
       return results;
+    }
+    async function loadTechnicianAssignments() {
+      technicianAssignments = [];
+      const response = await fetch("data/legajos.xlsx", { cache: "no-store" });
+      if (!response.ok) throw new Error("No se pudo leer data/legajos.xlsx (HTTP " + response.status + ").");
+      const workbook = XLSX.read(new Uint8Array(await response.arrayBuffer()), { type: "array" });
+      workbook.SheetNames.forEach((sheetName) => {
+        const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: "" });
+        const sheetCenter = /^RX\d{2}$/i.test(sheetName) ? normalize(sheetName) : "";
+        rows.forEach((row) => {
+          const legajo = normalize(getValue(row, ["Legajo"]));
+          const center = normalize(getValue(row, ["Centro"]) || sheetCenter);
+          const warehouse = normalize(getValue(row, ["Almacen", "Almacén", "Almacenes"]));
+          if (legajo && center && warehouse) technicianAssignments.push({ legajo, center, warehouse });
+        });
+      });
+      if (!technicianAssignments.length) throw new Error("No se encontraron asignaciones válidas en data/legajos.xlsx.");
     }
 
     function setFileStatus(tab, message, state) {
@@ -1444,26 +1479,33 @@ body{background:var(--bg);color:var(--ink)}
     async function handleLogin(event) {
       event.preventDefault();
       const submit = $("loginForm").querySelector('button[type="submit"]');
-      submit.disabled = true;
-      $("loginError").style.display = "none";
+      submit.disabled = true; $("loginError").style.display = "none";
       try {
-        const response = await fetch("/api/auth", {
-          method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ mode: loginType, identity: $("loginUser").value, password: $("loginPass").value })
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || "No pudimos validar el acceso.");
-        currentUser = result.user;
-        await loadRepositoryData();
+        if (!TAB_ORDER.every((tab) => db[tab].length)) await loadRepositoryData();
+        const identity = normalize($("loginUser").value), password = $("loginPass").value;
+        let user = null;
+        if (identity === "ADMIN" && password === "12345") {
+          user = { id:"ADMIN", name:"ADMIN", role:"Administrador", type:"admin", scopes:["*"] };
+        } else if (password === "12345" && loginType === "contractor") {
+          const codes = new Set();
+          TAB_ORDER.forEach((tab) => db[tab].forEach((row) => {
+            const code = normalize(getValue(row, tab === "transitos" ? ["Almacen Receptor", "Almacén Receptor"] : ["Almacen", "Almacén"]));
+            const name = normalize(getValue(row, ["Denominacion almacen", "Denominación almacén"]));
+            if (code && (identity === code || (name && identity === name))) codes.add(code);
+          }));
+          if (codes.size) user = { id:identity, name:identity, role:"Contratista", type:"contractor", scopes:[...codes] };
+        } else if (password === "12345" && loginType === "technician") {
+          const assignments = technicianAssignments.filter((item) => item.legajo === identity);
+          const scopes = [...new Set(assignments.map((item) => item.center + "-" + item.warehouse))];
+          if (scopes.length) user = { id:identity, name:"Legajo " + identity, role:"Técnico", type:"technician", scopes };
+        }
+        if (!user) throw new Error("No pudimos validar el acceso. Revisá el almacén o legajo y la contraseña temporal (12345).");
+        currentUser = user;
+        saveLocalActivity({ user_name:user.name, role:user.role, action:"Ingreso", scope:user.type==="admin"?"Vista completa":user.scopes.join(", "), files:[], created_at:new Date().toISOString() });
         await activatePortal(currentUser);
       } catch (error) {
-        try { await fetch("/api/auth", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "logout" }) }); } catch (ignore) {}
-        currentUser = null;
-        $("loginError").textContent = error.message || "No se pudo conectar con el servidor.";
-        $("loginError").style.display = "block";
-      } finally {
-        submit.disabled = false;
-      }
+        currentUser = null; $("loginError").textContent = error.message || "No se pudieron cargar los archivos del portal."; $("loginError").style.display = "block";
+      } finally { submit.disabled = false; }
     }
 
     async function activatePortal(user) {
@@ -1497,47 +1539,30 @@ body{background:var(--bg);color:var(--ink)}
     }
 
     async function logout() {
-      try { await fetch("/api/auth", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "logout" }) }); } catch (error) {}
-      if (presenceTimer) clearInterval(presenceTimer);
-      presenceTimer = null;
-      currentUser = null;
-      db = { stock: [], serializables: [], consumos: [], consumosSer: [], transitos: [] };
-      selectedScope = "*";
-      activeTab = "dashboard";
-      currentPage = 1;
-      document.body.classList.remove("is-admin");
-      $("appScreen").classList.add("hidden");
-      $("loginScreen").classList.remove("hidden");
-      $("loginUser").focus();
+      if (currentUser) saveLocalActivity({ user_name:currentUser.name, role:currentUser.role, action:"Salida", scope:currentUser.type==="admin"?"Vista completa":(currentUser.scopes||[]).join(", "), files:[], created_at:new Date().toISOString() });
+      if (presenceTimer) clearInterval(presenceTimer); presenceTimer = null;
+      try {
+        const id = sessionStorage.getItem("portal_presence_id");
+        localStorage.setItem("portal_presence_testing_v1", JSON.stringify(getLocalPresence().filter((p) => p.id !== id)));
+      } catch (error) {}
+      currentUser = null; db = { stock:[], serializables:[], consumos:[], consumosSer:[], transitos:[] }; technicianAssignments = [];
+      selectedScope="*"; activeTab="dashboard"; currentPage=1; document.body.classList.remove("is-admin");
+      $("appScreen").classList.add("hidden"); $("loginScreen").classList.remove("hidden"); $("loginUser").focus();
     }
-
     async function sendPresenceHeartbeat() {
       if (!currentUser) return;
-      await fetch("/api/presence", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ view: activeTab }) });
-    }
-
-    async function restoreSession() {
       try {
-        const response = await fetch("/api/auth", { credentials: "same-origin", cache: "no-store" });
-        if (!response.ok) return;
-        const result = await response.json();
-        currentUser = result.user;
-        await loadRepositoryData();
-        await activatePortal(currentUser);
-      } catch (error) {
-        try { await fetch("/api/auth", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "logout" }) }); } catch (ignore) {}
-        currentUser = null;
-        console.warn("No se pudo restaurar la sesión del portal.", error);
-      }
+        let id=sessionStorage.getItem("portal_presence_id");
+        if (!id) { id="p-"+Math.random().toString(36).slice(2)+Date.now().toString(36); sessionStorage.setItem("portal_presence_id",id); }
+        const users=getLocalPresence().filter((p)=>p.id!==id&&Number(p.updatedAt)>Date.now()-90000);
+        users.push({id,name:currentUser.name,role:currentUser.role,scope:currentUser.type==="admin"?"Vista completa":currentUser.scopes.join(", "),view:activeTab,updatedAt:Date.now()});
+        localStorage.setItem("portal_presence_testing_v1",JSON.stringify(users));
+        if(currentUser.type==="admin") await refreshPresence();
+      } catch (error) {}
     }
-
+    async function restoreSession() { return; }
     async function registerDownload(tabs) {
-      const response = await fetch("/api/activity", {
-        method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "Descarga", files: tabs })
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "No se pudo registrar la descarga.");
+      saveLocalActivity({user_name:currentUser?.name||"Usuario",role:currentUser?.role||"",action:"Descarga",scope:currentUser?.type==="admin"?(selectedScope==="*"?"Vista completa":selectedScope):(currentUser?.scopes||[]).join(", "),files:tabs||[],created_at:new Date().toISOString()});
     }
 
     function buildScopeSelect() {
