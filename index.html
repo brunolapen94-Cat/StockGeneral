@@ -946,7 +946,7 @@
 
 :root{--bg:#f7f7fc;--panel:#fff;--panel-2:#faf9ff;--ink:#201b53;--muted:#777491;--line:#e6e4f0;--nav:#211b59;--nav-2:#332374;--brand:#6550e8;--brand-dark:#4b33bb;--green:#59d5dc;--green-dark:#177f6d;--shadow:0 12px 34px rgba(40,27,108,.08)}
 body{background:var(--bg);color:var(--ink)}
-#loginScreen.login-screen{display:grid;grid-template-rows:56px 1fr;align-items:stretch;justify-items:stretch;gap:0;padding:5px;background:#171638;min-height:100vh}
+#loginScreen.login-screen{display:grid;place-items:center;padding:24px;background:#171638;min-height:100svh}
 .proposal-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 18px;background:#171638;color:#fff}
 .proposal-header>strong{font-size:10px;letter-spacing:.65px;white-space:nowrap}.proposal-header nav{display:flex;gap:5px;overflow:auto}
 .proposal-step{padding:8px 12px;border:1px solid #ffffff33;border-radius:22px;color:#e3deff;font-size:10px;white-space:nowrap}.proposal-step.active{background:#fff;color:#261e67;border-color:#fff}
@@ -972,12 +972,48 @@ body{background:var(--bg);color:var(--ink)}
 .downloads-panel{padding:20px}.download-heading h1{margin:0;font-size:22px}.download-heading p{color:var(--muted);font-size:11px}.package-card{display:flex;align-items:center;gap:12px;padding:15px;margin:16px 0;border:1px solid #e1ddf6;border-radius:11px;background:linear-gradient(105deg,#f0edff,#faf8ff)}.package-icon,.download-icon{display:grid;place-items:center;border-radius:9px;background:linear-gradient(140deg,#5966eb,#8951e2);color:#fff}.package-icon{width:36px;height:36px}.package-card>div:nth-child(2){flex:1}.package-card strong{font-size:11px}.package-card p{margin:4px 0 0;color:var(--muted);font-size:9px}
 .download-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.download-row{display:grid;grid-template-columns:29px 1fr auto;gap:9px;align-items:center;padding:11px;border:1px solid var(--line);border-radius:9px;background:#fff}.download-row strong{font-size:10px}.download-row small{display:block;margin-top:4px;color:var(--muted);font-size:8px}.download-row button{height:30px;width:32px;border:1px solid var(--line);border-radius:8px;background:white;color:#6651d2}.download-icon{width:29px;height:29px;background:#f0edff;color:#6651d2}.download-footnote{color:var(--muted);font-size:9px}
 @media(max-width:1000px){.app-shell{grid-template-columns:1fr}.sidebar{display:flex;flex-direction:row;align-items:center;overflow:auto;padding:8px 12px;gap:10px}.sidebar-brand{white-space:nowrap}.profile{min-width:170px}.sidebar nav{min-width:max-content}.section-title{display:none}.nav-list{display:flex}.nav-btn{white-space:nowrap}.admin-navigation{padding:0;border:0}.sidebar-foot{display:none}.filters{grid-template-columns:repeat(3,minmax(110px,1fr))}.search-box{grid-column:span 2}}
-@media(max-width:700px){.proposal-header{align-items:flex-start;flex-direction:column;height:auto;padding:12px}.login-screen{grid-template-rows:auto 1fr}.login-card{padding:24px 20px}.sidebar-brand,.profile{display:none}.sidebar{padding:6px}.portal-navigation{width:100%}.portal-navigation .nav-list{justify-content:space-around}.nav-btn{padding:8px;font-size:10px}.admin-navigation{display:none}.topbar{padding:8px 11px}.top-actions .chip{display:none}.content{padding:15px 11px}.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.search-box{grid-column:1/-1}.hero-grid{grid-template-columns:1fr}.download-grid{grid-template-columns:1fr}.package-card{flex-wrap:wrap}.package-card>div:nth-child(2){min-width:calc(100% - 55px)}.package-card .primary-btn{width:100%}}
+@media(max-width:700px){.proposal-header{align-items:flex-start;flex-direction:column;height:auto;padding:12px}.login-screen{min-height:100svh;padding:14px}.login-card{padding:24px 20px}.sidebar-brand,.profile{display:none}.sidebar{padding:6px}.portal-navigation{width:100%}.portal-navigation .nav-list{justify-content:space-around}.nav-btn{padding:8px;font-size:10px}.admin-navigation{display:none}.topbar{padding:8px 11px}.top-actions .chip{display:none}.content{padding:15px 11px}.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.search-box{grid-column:1/-1}.hero-grid{grid-template-columns:1fr}.download-grid{grid-template-columns:1fr}.package-card{flex-wrap:wrap}.package-card>div:nth-child(2){min-width:calc(100% - 55px)}.package-card .primary-btn{width:100%}}
+  
+    @media (max-width: 700px) {
+      #loginScreen.login-screen { min-height: 100svh; padding: 14px; }
+      #loginScreen .login-card { width: min(430px, 100%); }
+      .app-shell { display: block; min-width: 0; }
+      .sidebar { width: 100%; max-width: 100%; min-width: 0; position: sticky; top: 0; z-index: 30; flex: 0 0 auto; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
+      .sidebar > nav { flex: 0 0 auto; width: auto; }
+      .sidebar nav .nav-list { flex-wrap: nowrap; gap: 3px; }
+      .sidebar .nav-btn { min-height: 40px; padding: 8px 9px; font-size: 11px; }
+      .sidebar .admin-navigation { display: block; }
+      .main, .content, .panel, .table-panel { min-width: 0; }
+      .topbar { grid-template-columns: 1fr; gap: 7px; padding: 9px 12px; }
+      .top-actions { width: 100%; justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; }
+      .top-actions .chip { display: none; }
+      .content { padding: 12px 10px 20px; gap: 11px; }
+      .filters { grid-template-columns: 1fr; gap: 8px; }
+      .filter-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      .filter-controls .filter-control { min-width: 0; }
+      .search-box { grid-column: 1 / -1; max-width: none; }
+      .scope-control { grid-column: 1 / -1; }
+      .dataset-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .dataset-tab { flex: 0 0 auto; }
+      #tableWrap { overflow: visible; }
+      #tableWrap table { display: block; width: 100%; min-width: 0; }
+      #tableWrap thead { display: none; }
+      #tableWrap tbody { display: grid; gap: 9px; }
+      #tableWrap tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 7px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+      #tableWrap td { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; min-width: 0; padding: 7px 6px; border: 0; text-align: left; overflow-wrap: anywhere; font-size: 11px; }
+      #tableWrap td::before { content: attr(data-label); color: var(--muted); font-size: 8px; line-height: 1.2; font-weight: 800; text-transform: uppercase; letter-spacing: .25px; }
+      #tableWrap td.num { text-align: left; font-variant-numeric: tabular-nums; }
+      .table-head { align-items: flex-start; }
+      .table-tools { width: 100%; justify-content: space-between; }
+      .download-grid { grid-template-columns: 1fr; }
+      .package-card { flex-wrap: wrap; }
+      .package-card .primary-btn { width: 100%; }
+    }
   </style>
 </head>
 <body>
 <section id="loginScreen" class="login-screen">
-  <header class="proposal-header"><strong>PROPUESTA VISUAL · PORTAL DE STOCK</strong><nav><span class="proposal-step active">01 · Acceso</span><span class="proposal-step">02 · Información</span><span class="proposal-step">03 · Resumen</span><span class="proposal-step">04 · Descarga</span><span class="proposal-step">05 · Actividad</span></nav></header>
+  
   <div class="login-card"><div class="login-head"><div class="personal-wordmark"><span>telecom</span><i></i><span>personal</span></div><h1>Acceso</h1><p>Ingresá para continuar con tu operación</p></div>
   <div class="login-role" role="group" aria-label="Tipo de usuario"><button type="button" id="roleContractor" class="selected" aria-pressed="true">Contratista</button><button type="button" id="roleTechnician" aria-pressed="false">Técnico</button></div>
   <form id="loginForm"><label class="field"><span id="loginIdentityLabel">Almacén</span><input id="loginUser" type="text" placeholder="Ingresá tu almacén" autocomplete="username" required /></label><label class="field"><span>Contraseña</span><input id="loginPass" type="password" placeholder="Ingresá tu contraseña" autocomplete="current-password" required /></label>
@@ -987,8 +1023,8 @@ body{background:var(--bg);color:var(--ink)}
     <section id="appScreen" class="app-shell hidden">
 <aside class="sidebar"><div class="sidebar-brand"><span class="sidebar-brand-name">telecom <i></i> personal</span></div>
 <div class="profile"><div id="avatar" class="avatar">A</div><div><strong id="profileName">ADMIN</strong><span id="profileRole">Administrador</span></div></div>
-<nav><p class="section-title">Portal</p><div class="nav-list"><button class="nav-btn active" data-tab="stock" type="button"><i data-lucide="database"></i>Información</button><button class="nav-btn" data-tab="dashboard" type="button"><i data-lucide="layout-dashboard"></i>Resumen</button><button class="nav-btn" data-tab="downloads" type="button"><i data-lucide="download"></i>Descarga</button><button class="nav-btn admin-only" data-tab="activity" type="button"><i data-lucide="activity"></i>Actividad</button></div></nav>
-<nav><p class="section-title">Administración</p><div class="nav-list"><button class="nav-btn admin-only" data-tab="carga" type="button"><i data-lucide="upload"></i>Actualizar archivos</button></div></nav><div class="sidebar-foot"><span class="presence-dot"></span>Sesión activa</div></aside>
+<nav class="portal-navigation"><p class="section-title">Portal</p><div class="nav-list"><button class="nav-btn active" data-tab="stock" type="button"><i data-lucide="database"></i>Información</button><button class="nav-btn" data-tab="dashboard" type="button"><i data-lucide="layout-dashboard"></i>Resumen</button><button class="nav-btn" data-tab="downloads" type="button"><i data-lucide="download"></i>Descarga</button><button class="nav-btn admin-only" data-tab="activity" type="button"><i data-lucide="activity"></i>Actividad</button></div></nav>
+<nav class="admin-navigation"><p class="section-title">Administración</p><div class="nav-list"><button class="nav-btn admin-only" data-tab="carga" type="button"><i data-lucide="upload"></i>Actualizar archivos</button></div></nav><div class="sidebar-foot"><span class="presence-dot"></span>Sesión activa</div></aside>
 
     <main class="main">
       <header class="topbar">
@@ -1192,9 +1228,11 @@ body{background:var(--bg);color:var(--ink)}
     };
 
     const TAB_ORDER = ["stock", "serializables", "consumosSer", "consumos", "transitos"];
-    const DATA_FILTERS = {stock:[{label:"Centro",key:"center",aliases:["Centro","Ce."],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén","Alm."],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Lote",key:"lot",aliases:["Lote"],kind:"text"}],serializables:[{label:"Centro",key:"center",aliases:["Centro","Ce."],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén","Alm."],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Lote",key:"lot",aliases:["Lote"],kind:"text"}],consumosSer:[{label:"Centro",key:"center",aliases:["Centro","Ce."],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén","Alm."],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Serie",key:"serial",aliases:["Numero de serie","Número de serie","Nº de Serie","Nº serie"],kind:"text"}],consumos:[{label:"Centro",key:"center",aliases:["Centro","Ce."],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén","Alm."],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Fecha",key:"date",aliases:["Fecha de entrada"],kind:"text"}],transitos:[{label:"Centro receptor",key:"center",aliases:["Centro Receptor", "Centro Rec"],kind:"select"},{label:"Almacén receptor",key:"warehouse",aliases:["Almacen Receptor","Almacén Receptor","Almacen Re"],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Lote / PEP",key:"lot",aliases:["Lote/ Clase Valoracion","Lote/ Clase Valoración","Lote/ Clas","Elemento PEP"],kind:"text"}]};
+    const DATA_FILTERS = {stock:[{label:"Centro",key:"center",aliases:["Centro","Ce."],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén","Alm."],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Lote",key:"lot",aliases:["Lote"],kind:"text"}],serializables:[{label:"Centro",key:"center",aliases:["Centro","Ce."],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén","Alm."],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Lote",key:"lot",aliases:["Lote"],kind:"text"}],consumosSer:[{label:"Centro",key:"center",aliases:["Centro","Ce."],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén","Alm."],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Serie",key:"serial",aliases:["Numero de serie","Número de serie","Nº de Serie","Nº serie"],kind:"text"}],consumos:[{label:"Centro",key:"center",aliases:["Centro","Ce."],kind:"select"},{label:"Almacén",key:"warehouse",aliases:["Almacen","Almacén","Alm."],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Fecha",key:"date",aliases:["Fecha de entrada","Registrado el"],kind:"text"}],transitos:[{label:"Centro receptor",key:"center",aliases:["Centro Receptor", "Centro Rec"],kind:"select"},{label:"Almacén receptor",key:"warehouse",aliases:["Almacen Receptor","Almacén Receptor","Almacen Re"],kind:"select"},{label:"Material",key:"material",aliases:["Material"],kind:"text"},{label:"Lote / PEP",key:"lot",aliases:["Lote/ Clase Valoracion","Lote/ Clase Valoración","Lote/ Clas","Elemento PEP"],kind:"text"}]};
     const STORAGE_PREFIX = "portal_sap_v1_";
     const PAGE_SIZE = 25;
+    let searchDebounce = null;
+    const ROW_INDEX = new WeakMap();
 
     let currentUser = null;
     let selectedScope = "*";
@@ -1274,59 +1312,62 @@ body{background:var(--bg);color:var(--ink)}
       return missing;
     }
 
-    function rowMatchesScope(tab, row) {
+    function getRowIndex(tab, row) {
+      let index = ROW_INDEX.get(row);
+      if (index) return index;
+      const config = CONFIG[tab], scopes = [];
+      (config.scopeFields || []).forEach((aliases) => {
+        const value = normalize(getValue(row, aliases));
+        if (value && !scopes.includes(value)) scopes.push(value);
+      });
+      const centerAliases = tab === "transitos" ? ["Centro Receptor", "Centro Rec"] : ["Centro", "Ce."];
+      const warehouseAliases = tab === "transitos" ? ["Almacen Receptor", "Almacén Receptor", "Almacen Re"] : ["Almacen", "Almacén", "Alm."];
+      const center = normalize(getValue(row, centerAliases)), warehouse = normalize(getValue(row, warehouseAliases));
+      if (center && warehouse) scopes.push(center + "-" + warehouse);
+      const search = config.columns.map(([label, aliases]) => { const value = getValue(row, aliases); return normalize(String(value)) + " " + normalize(formatDisplayValue(tab, label, value)); }).join(" ");
+      const filterValues = (DATA_FILTERS[tab] || []).map((filter) => normalize(formatDisplayValue(tab, filter.label, getValue(row, filter.aliases))));
+      index = { scopes, search, filterValues };
+      ROW_INDEX.set(row, index);
+      return index;
+    }
+
+    function prepareRows(tab, rows) {
+      rows.forEach((row) => getRowIndex(tab, row));
+      return rows;
+    }
+
+    function rowMatchesScope(tab, row, normalizedScopes) {
       if (!currentUser) return false;
       if (currentUser.type === "admin" && selectedScope === "*") return true;
-
-      const scopes = currentUser.type === "admin" ? [selectedScope] : currentUser.scopes;
-      const normalizedScopes = scopes.map(normalize).filter(Boolean);
-      const fields = CONFIG[tab].scopeFields || [];
-
-      return normalizedScopes.some((scope) => {
-        if (/^RX\d{2,}-/.test(scope)) return rowMatchesCenterWarehouse(tab, row, scope);
-        return fields.some((aliases) => normalize(getValue(row, aliases)) === scope);
-      });
+      const scopes = normalizedScopes || (currentUser.type === "admin" ? [selectedScope] : currentUser.scopes).map(normalize).filter(Boolean);
+      const indexedScopes = getRowIndex(tab, row).scopes;
+      return scopes.some((scope) => indexedScopes.includes(scope));
     }
 
-    function rowMatchesCenterWarehouse(tab, row, scope) {
-      const parts = scope.split("-").map((part) => part.trim()).filter(Boolean);
-      if (parts.length < 2) return false;
-
-      const center = parts[0];
-      const warehouse = parts.slice(1).join("-");
-      const centerAliases = tab === "transitos"
-        ? ["Centro Receptor", "Centro Rec"]
-        : ["Centro"];
-      const warehouseAliases = tab === "transitos"
-        ? ["Almacen Receptor", "Almacén Receptor", "Almacen Re"]
-        : ["Almacen", "Almacén", "Alm."];
-
-      const rowCenter = normalize(getValue(row, centerAliases));
-      const rowWarehouse = normalize(getValue(row, warehouseAliases));
-
-      return rowCenter === center && rowWarehouse === warehouse;
-    }
-
-    function rowMatchesSearch(tab, row) {
-      const filtersVisible=TAB_ORDER.includes(tab)&&tab===activeTab&&!document.querySelector(".filters").classList.contains("hidden");
-      if(!filtersVisible)return true;
-      const query=normalize($("globalSearch").value);
-      if(query){
-        const haystack=CONFIG[tab].columns.map(([,aliases])=>normalize(getValue(row,aliases))).join(" ");
-        if(!haystack.includes(query))return false;
-      }
-      for(const filter of DATA_FILTERS[tab]||[]){
-        const control=document.querySelector('[data-filter-key="'+filter.key+'"]');
-        const value=normalize(control?.value||"");
-        if(!value)continue;
-        const cell=normalize(getValue(row,filter.aliases));
-        if(filter.kind==="select"?cell!==value:!cell.includes(value))return false;
+    function rowMatchesSearch(tab, row, query, criteria) {
+      const index = getRowIndex(tab, row);
+      if (query && !index.search.includes(query)) return false;
+      for (let i = 0; i < criteria.length; i++) {
+        const criterion = criteria[i];
+        if (!criterion.value) continue;
+        const cell = index.filterValues[i] || "";
+        if (criterion.kind === "select" ? cell !== criterion.value : !cell.includes(criterion.value)) return false;
       }
       return true;
     }
 
     function getFiltered(tab) {
-      return db[tab].filter((row) => rowMatchesScope(tab, row) && rowMatchesSearch(tab, row));
+      const filtersVisible = TAB_ORDER.includes(tab) && tab === activeTab && !document.querySelector(".filters").classList.contains("hidden");
+      const query = filtersVisible ? normalize($("globalSearch").value) : "";
+      const definitions = filtersVisible ? (DATA_FILTERS[tab] || []) : [];
+      const criteria = definitions.map((filter) => ({ kind: filter.kind, value: normalize(document.querySelector('[data-filter-key="' + filter.key + '"]')?.value || "") }));
+      const allAccess = currentUser?.type === "admin" && selectedScope === "*";
+      const scopes = allAccess ? null : (currentUser?.type === "admin" ? [selectedScope] : currentUser?.scopes || []).map(normalize).filter(Boolean);
+      return db[tab].filter((row) => {
+        const index = getRowIndex(tab, row);
+        if (!allAccess && !scopes.some((scope) => index.scopes.includes(scope))) return false;
+        return rowMatchesSearch(tab, row, query, criteria);
+      });
     }
 
     function getAllFiltered() {
@@ -1337,7 +1378,7 @@ body{background:var(--bg);color:var(--ink)}
       return rows.map((row) => {
         const out = {};
         CONFIG[tab].columns.forEach(([label, aliases]) => {
-          out[label] = getValue(row, aliases);
+          out[label] = formatDisplayValue(tab, label, getValue(row, aliases));
         });
         return out;
       });
@@ -1416,7 +1457,7 @@ body{background:var(--bg);color:var(--ink)}
           const missing = validateRows(tab, rows);
           if (missing.length) throw new Error("Faltan columnas: " + missing.join(", "));
           if (!rows.length) throw new Error("El archivo no tiene filas.");
-          db[tab] = rows; loadTimes[tab] = new Date().toLocaleString("es-AR");
+          prepareRows(tab, rows); db[tab] = rows; loadTimes[tab] = new Date().toLocaleString("es-AR");
           setFileStatus(tab, "OK · " + rows.length.toLocaleString("es-AR") + " filas", "ok");
           return { tab, ok: true };
         } catch (error) {
@@ -1705,7 +1746,7 @@ body{background:var(--bg);color:var(--ink)}
       const host=$("filterControls");
       if(!host)return;
       const definitions=DATA_FILTERS[activeTab]||[];
-      const rows=db[activeTab].filter((row)=>rowMatchesScope(activeTab,row));
+      const userScopes=currentUser?.type==="admin"?[selectedScope]:(currentUser?.scopes||[]);const normalizedScopes=userScopes.map(normalize).filter(Boolean);const rows=db[activeTab].filter((row)=>rowMatchesScope(activeTab,row,normalizedScopes));
       host.innerHTML=definitions.map((filter)=>{
         if(filter.kind==="select"){
           const values=Array.from(new Set(rows.map((row)=>String(getValue(row,filter.aliases)||"").trim()).filter(Boolean))).sort((a,b)=>a.localeCompare(b,"es"));
@@ -1713,7 +1754,7 @@ body{background:var(--bg);color:var(--ink)}
         }
         return '<label class="filter-control"><span>'+escapeHtml(filter.label)+'</span><input type="search" data-filter-key="'+filter.key+'" placeholder="Todos" /></label>';
       }).join("");
-      host.querySelectorAll("[data-filter-key]").forEach((control)=>{const update=()=>{currentPage=1;renderTable();};control.addEventListener("input",update);control.addEventListener("change",update);});
+      host.querySelectorAll("[data-filter-key]").forEach((control)=>{const update=()=>{currentPage=1;renderTable();};control.addEventListener("input",()=>{if(control.tagName==="SELECT")return;currentPage=1;clearTimeout(searchDebounce);searchDebounce=setTimeout(renderTable,140);});control.addEventListener("change",update);});
     }
 
     function renderDownloadCards() {
@@ -1724,44 +1765,55 @@ body{background:var(--bg);color:var(--ink)}
       refreshIcons();
     }
     function renderTable() {
-      const config = CONFIG[activeTab];
-      const rows = getFiltered(activeTab);
-      const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+      const config = CONFIG[activeTab], rows = getFiltered(activeTab);
+      const mobile = window.matchMedia("(max-width: 700px)").matches;
+      const pageSize = mobile ? (activeTab === "transitos" || activeTab === "consumosSer" ? 5 : 8) : PAGE_SIZE;
+      const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
       currentPage = Math.min(currentPage, totalPages);
-
       $("tableTitle").textContent = config.title;
       $("tableSubtitle").textContent = "Vista filtrada por usuario. La descarga respeta el mismo alcance.";
       $("rowBadge").textContent = rows.length + " filas";
-      $("pagerInfo").textContent = "Pagina " + currentPage + " de " + totalPages;
+      $("pagerInfo").textContent = "Página " + currentPage + " de " + totalPages;
       $("prevPage").disabled = currentPage <= 1;
       $("nextPage").disabled = currentPage >= totalPages;
-
-      if (!rows.length) {
-        $("tableWrap").innerHTML = '<div class="empty">Sin registros para esta vista, usuario o busqueda.</div>';
-        return;
-      }
-
-      const start = (currentPage - 1) * PAGE_SIZE;
-      const pageRows = rows.slice(start, start + PAGE_SIZE);
+      if (!rows.length) { $("tableWrap").innerHTML = '<div class="empty">Sin registros para esta vista, usuario o búsqueda.</div>'; return; }
+      const pageRows = rows.slice((currentPage - 1) * pageSize, currentPage * pageSize);
       const header = config.columns.map(([label]) => `<th>${escapeHtml(label)}</th>`).join("");
       const body = pageRows.map((row) => {
         const cells = config.columns.map(([label, aliases]) => {
-          const value = getValue(row, aliases);
+          const value = formatDisplayValue(activeTab, label, getValue(row, aliases));
           const isNumber = ["Libre utilizacion", "Cantidad", "Valor libre util.", "Valor neto"].some((name) => normalize(name) === normalize(label));
-          const content = label === "Libre utilizacion"
-            ? stockStateCell(value)
-            : escapeHtml(value);
-          return `<td class="${isNumber ? "num" : ""}">${content}</td>`;
+          const content = normalize(label) === normalize("Libre utilizacion") ? stockStateCell(value) : escapeHtml(value);
+          return `<td data-label="${escapeHtml(label)}" class="${isNumber ? "num" : ""}">${content}</td>`;
         }).join("");
         return `<tr>${cells}</tr>`;
       }).join("");
+      $("tableWrap").innerHTML = `<table><thead><tr>${header}</tr></thead><tbody>${body}</tbody></table>`;
+    }
 
-      $("tableWrap").innerHTML = `
-        <table>
-          <thead><tr>${header}</tr></thead>
-          <tbody>${body}</tbody>
-        </table>
-      `;
+    function formatDisplayValue(tab, label, value) {
+      if (value === null || value === undefined || value === "") return "";
+      const field = normalize(label);
+      if (field.includes("HORA")) {
+        if (value instanceof Date && !Number.isNaN(value.getTime())) return new Intl.DateTimeFormat("es-AR", { hour:"2-digit", minute:"2-digit", second:"2-digit", hourCycle:"h23" }).format(value);
+        const raw = String(value).trim();
+        const numeric = typeof value === "number" ? value : (/^\d+(?:[.,]\d+)?$/.test(raw) ? Number(raw.replace(",", ".")) : NaN);
+        if (Number.isFinite(numeric) && numeric >= 0 && numeric < 1) {
+          const seconds = Math.round(numeric * 86400) % 86400;
+          return [Math.floor(seconds/3600), Math.floor((seconds%3600)/60), seconds%60].map((n)=>String(n).padStart(2,"0")).join(":");
+        }
+        return raw;
+      }
+      if (!(field.includes("FECHA") || field.includes("CONTAB") || field.includes("REGISTRADO"))) return String(value);
+      if (value instanceof Date && !Number.isNaN(value.getTime())) return new Intl.DateTimeFormat("es-AR",{day:"2-digit",month:"2-digit",year:"numeric",timeZone:"UTC"}).format(value);
+      const raw=String(value).trim(), iso=raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if(iso)return iso[3]+"/"+iso[2]+"/"+iso[1];
+      const serial=typeof value==="number"?value:(/^\d+(?:[.,]\d+)?$/.test(raw)?Number(raw.replace(",", ".")):NaN);
+      if(Number.isFinite(serial)&&serial>=20000&&serial<=80000){
+        const date=new Date(Date.UTC(1899,11,30)+Math.round(serial*86400000));
+        return new Intl.DateTimeFormat("es-AR",{day:"2-digit",month:"2-digit",year:"numeric",timeZone:"UTC"}).format(date);
+      }
+      return raw;
     }
 
     function stockStateCell(value) {
@@ -1814,7 +1866,8 @@ body{background:var(--bg);color:var(--ink)}
       $("logoutBtn").addEventListener("click", logout);
       $("globalSearch").addEventListener("input", () => {
         currentPage = 1;
-        renderAll();
+        clearTimeout(searchDebounce);
+        searchDebounce = setTimeout(renderTable, 140);
       });
       $("scopeSelect").addEventListener("change", () => {
         selectedScope = $("scopeSelect").value;
