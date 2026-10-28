@@ -1009,6 +1009,13 @@ body{background:var(--bg);color:var(--ink)}
       .package-card { flex-wrap: wrap; }
       .package-card .primary-btn { width: 100%; }
     }
+  
+    @media (max-width: 700px) {
+      .sidebar, .dataset-tabs { scrollbar-width: none; -ms-overflow-style: none; }
+      .sidebar::-webkit-scrollbar, .dataset-tabs::-webkit-scrollbar { display: none; }
+      .filter-control > span, #tableWrap td::before { font-size: 9px; }
+      #tableWrap td { font-size: 12px; }
+    }
   </style>
 </head>
 <body>
