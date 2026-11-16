@@ -1824,10 +1824,7 @@ body{background:var(--bg);color:var(--ink)}
     }
 
     function stockStateCell(value) {
-      const qty = parseNumber(value);
-      const state = qty > 100 ? "Disponible" : "Revisar";
-      const className = qty > 100 ? "state" : "state warn";
-      return `${escapeHtml(value)} <span class="${className}">${state}</span>`;
+      return escapeHtml(value);
     }
 
     async function exportVisibleWorkbook(onlyTab) {
