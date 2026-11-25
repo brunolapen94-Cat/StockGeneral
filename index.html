@@ -1016,9 +1016,26 @@ body{background:var(--bg);color:var(--ink)}
       .filter-control > span, #tableWrap td::before { font-size: 9px; }
       #tableWrap td { font-size: 12px; }
     }
+    .initial-loader { position:fixed; inset:0; z-index:10000; display:grid; place-items:center; padding:24px; background:radial-gradient(ellipse at 82% 18%,rgba(151,67,239,.78),transparent 42%),radial-gradient(ellipse at 12% 92%,rgba(38,102,239,.82),transparent 48%),linear-gradient(125deg,#262b9d 0%,#43279e 48%,#6926b8 100%); }
+    .initial-loader-card { width:min(440px,100%); min-height:330px; display:grid; align-content:center; justify-items:center; gap:24px; padding:34px 28px; color:#fff; text-align:center; border:1px solid rgba(255,255,255,.34); border-radius:22px; background:rgba(37,24,104,.48); box-shadow:0 24px 80px rgba(18,12,72,.24); backdrop-filter:blur(20px); }
+    .initial-loader-brand { display:inline-flex; align-items:center; padding:12px 19px; border-radius:15px; background:#4b08b5; box-shadow:0 10px 28px rgba(21,8,74,.24); font-size:23px; font-weight:650; letter-spacing:-1px; }
+    .initial-loader-brand span { opacity:.85; font-weight:400; padding:0 5px; }
+    .initial-loader-ring { width:76px; height:76px; border:8px solid rgba(255,255,255,.34); border-top-color:#d5bdff; border-right-color:#9b70f2; border-radius:50%; animation:initial-loader-spin 1.05s linear infinite; }
+    .initial-loader-message { margin:0; font-size:15px; font-weight:600; }
+    @keyframes initial-loader-spin { to { transform:rotate(360deg); } }
+    @media(prefers-reduced-motion:reduce) { .initial-loader-ring { animation:none; } }
+    @media(max-width:480px) { .initial-loader { padding:18px; } .initial-loader-card { min-height:310px; padding:28px 22px; } .initial-loader-brand { font-size:20px; } }
   </style>
 </head>
 <body>
+<section id="initialLoader" class="initial-loader" role="status" aria-live="polite" aria-label="Cargando la información de tu stock">
+  <div class="initial-loader-card">
+    <div class="initial-loader-brand">telecom <span>|</span> personal</div>
+    <div class="initial-loader-ring" aria-hidden="true"></div>
+    <p class="initial-loader-message">Cargando la información de tu stock</p>
+  </div>
+</section>
+
 <section id="loginScreen" class="login-screen">
   
   <div class="login-card"><div class="login-head"><div class="personal-wordmark"><span>telecom</span><i></i><span>personal</span></div><h1>Acceso</h1><p>Ingresá para continuar con tu operación</p></div>
@@ -1524,12 +1541,19 @@ body{background:var(--bg);color:var(--ink)}
       $("loginUser").placeholder = contractor ? "Ingresá tu almacén" : "Ingresá tu número de legajo";
     }
 
+    function setInitialLoading(loading) {
+      $("initialLoader").classList.toggle("hidden", !loading);
+    }
+
     async function handleLogin(event) {
       event.preventDefault();
       const submit = $("loginForm").querySelector('button[type="submit"]');
       submit.disabled = true; $("loginError").style.display = "none";
       try {
-        if (!TAB_ORDER.every((tab) => db[tab].length)) await loadRepositoryData();
+        if (!TAB_ORDER.every((tab) => db[tab].length)) {
+          setInitialLoading(true);
+          try { await loadRepositoryData(); } finally { setInitialLoading(false); }
+        }
         const identity = normalize($("loginUser").value), password = $("loginPass").value;
         let user = null;
         if (identity === "ADMIN" && password === "12345") {
@@ -1906,13 +1930,22 @@ body{background:var(--bg);color:var(--ink)}
       }
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
       loadSavedData();
       setLoginType("contractor");
       bindEvents();
       renderFileList();
       restoreSession();
       refreshIcons();
+      setInitialLoading(true);
+      try {
+        await loadRepositoryData();
+      } catch (error) {
+        $("loginError").textContent = error.message || "No se pudo cargar la información del portal.";
+        $("loginError").style.display = "block";
+      } finally {
+        setInitialLoading(false);
+      }
     });
   </script>
 </body>
