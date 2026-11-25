@@ -1028,7 +1028,7 @@ body{background:var(--bg);color:var(--ink)}
   </style>
 </head>
 <body>
-<section id="initialLoader" class="initial-loader" role="status" aria-live="polite" aria-label="Cargando la información de tu stock">
+<section id="initialLoader" class="initial-loader hidden" role="status" aria-live="polite" aria-label="Cargando la información de tu stock">
   <div class="initial-loader-card">
     <div class="initial-loader-brand">telecom <span>|</span> personal</div>
     <div class="initial-loader-ring" aria-hidden="true"></div>
@@ -1930,22 +1930,13 @@ body{background:var(--bg);color:var(--ink)}
       }
     }
 
-    document.addEventListener("DOMContentLoaded", async () => {
+    document.addEventListener("DOMContentLoaded", () => {
       loadSavedData();
       setLoginType("contractor");
       bindEvents();
       renderFileList();
       restoreSession();
       refreshIcons();
-      setInitialLoading(true);
-      try {
-        await loadRepositoryData();
-      } catch (error) {
-        $("loginError").textContent = error.message || "No se pudo cargar la información del portal.";
-        $("loginError").style.display = "block";
-      } finally {
-        setInitialLoading(false);
-      }
     });
   </script>
 </body>
